@@ -1,13 +1,14 @@
-package com.xebia.eda;
+package com.xebia.eda.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xebia.common.service.DomainSamples;
+import com.xebia.common.DomainSamples;
 import com.xebia.common.domain.Order;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -22,8 +23,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest
+@ComponentScan(basePackages = { "com.xebia.common.*", "com.xebia.eda.*" })
 @ActiveProfiles({"default", "test"})
-public class EdaApplicationTests {
+public class EdaControllerTests {
 
 
     @Autowired

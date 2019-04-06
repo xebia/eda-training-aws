@@ -1,4 +1,4 @@
-package com.xebia.common.service;
+package com.xebia.common;
 
 import com.xebia.common.domain.Customer;
 import com.xebia.common.domain.Order;
