@@ -51,6 +51,16 @@ public class OrderLine {
         return itemCount;
     }
 
+    public boolean sameContent(OrderLine orderLine) {
+        return orderLine.getProductId() == productId && orderLine.getProductName().equals(productName) && orderLine.getItemCount() == itemCount;
+
+    }
+
+    public OrderLine withId(Long id) {
+        this.id = id;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

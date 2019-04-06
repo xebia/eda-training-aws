@@ -16,6 +16,7 @@ public class Order {
         this.status = status;
         this.created = created;
     }
+
     public Order(OrderState status) {
         this.status = status;
         this.created = LocalDateTime.now();
@@ -28,21 +29,23 @@ public class Order {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private  Long id;
+    private Long id;
 
     @Basic
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private  OrderState status;
+    private OrderState status;
     @Basic
     @Column(name = "created")
-    private  LocalDateTime created;
+    private LocalDateTime created;
 
-    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private final List<OrderLine> lines = new ArrayList<OrderLine>();
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
     public OrderState getStatus() {
         return status;
@@ -52,7 +55,20 @@ public class Order {
         return created;
     }
 
-    public List<OrderLine> getLines() { return lines; }
+    public List<OrderLine> getLines() {
+        return lines;
+    }
+
+    public Order add(OrderLine orderLine) {
+        lines.add(orderLine);
+        return this;
+    }
+
+    public Order remove(Long orderLineId) {
+        lines.removeIf(l -> l.getId() == orderLineId);
+        return this;
+    }
+
 
     @Override
     public boolean equals(Object o) {

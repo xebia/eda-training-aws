@@ -1,57 +1,67 @@
 package com.xebia.eda.controller;
 
 import com.xebia.common.order.Order;
-import com.xebia.common.order.OrderRepository;
+import com.xebia.common.order.OrderLine;
+import com.xebia.common.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/order-api/v2")
-//TODO: create async logic
+//TODO: add hooks for async logic
 public class EdaOrderController {
 
-    private OrderRepository repository;
+    private final OrderService orderService;
 
     @Autowired
-    public EdaOrderController(OrderRepository repository) {
-        this.repository = repository;
+    public EdaOrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     @GetMapping("/orders/{id}")
     @ResponseBody
     public Optional<Order> getOrder(Long id) {
-        return repository.findById(id);
+        return orderService.getOrder(id);
     }
-
 
     @GetMapping("/orders")
     @ResponseBody
     public List<Order> getOrders() {
-        return repository.findAll();
+        return orderService.getOrders();
     }
 
     @PostMapping("/orders")
     @ResponseBody
     public Order saveOrder(@Valid @RequestBody Order order) {
-        return repository.save(order);
+        return orderService.saveOrder(order);
     }
 
     @PutMapping("/orders/{id}")
     @ResponseBody
     public Order updateOrder(@Valid @RequestBody Order order, Long id) {
-        Assert.isTrue(order.getId() == null || order.getId() == id, "Conflicting order id");
-        return repository.save(order);
+        return orderService.saveOrder(order);
     }
 
-    @PostConstruct
-    public void done() {
-        System.out.println("============> Initialized " + repository);
+    @GetMapping("/orders/{orderId}/lines/{lineId}")
+    @ResponseBody
+    public Optional<OrderLine> getOrderLine(Long orderId, Long lineId) {
+        return orderService.getOrderLine(orderId, lineId);
+    }
+
+    @PostMapping("/orders/{orderId}/lines")
+    @ResponseBody
+    public OrderLine saveOrderLine(Long orderId, @Valid @RequestBody OrderLine orderline) {
+        return orderService.saveOrderLine(orderId, orderline);
+    }
+
+    @PutMapping("/orders/{orderId}/lines/{lineId}")
+    @ResponseBody
+    public OrderLine updateOrderLine(Long orderId, Long lineId, @Valid @RequestBody OrderLine orderline) {
+        return orderService.updateOrderLine(orderId, lineId, orderline);
     }
 
 }

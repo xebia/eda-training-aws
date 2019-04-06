@@ -6,7 +6,7 @@
 		<groupId>com.xebia</groupId>
 		<artifactId>parent</artifactId>
 		<version>1.0.0</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/> <!-- lookup parent from orderRepository -->
 	</parent>
 	<groupId>com.xebia</groupId>
 	<artifactId>order-service</artifactId>
