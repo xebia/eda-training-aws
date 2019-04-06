@@ -1,22 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.xebia</groupId>
-		<artifactId>parent</artifactId>
-		<version>1.0.0</version>
-		<relativePath/> <!-- lookup parent from orderRepository -->
-	</parent>
-	<groupId>com.xebia</groupId>
-	<artifactId>order-service</artifactId>
-	<name>order-service</name>
-	<description>order service</description>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.xebia</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.0.0</version>
+        <relativePath>..</relativePath> <!-- lookup parent from orderRepository -->
+    </parent>
+    <groupId>com.xebia</groupId>
+    <artifactId>order-service</artifactId>
+    <version>1.0.0</version>
 
-	<properties>
-		<java.version>1.8</java.version>
-		<spring-cloud.version>Greenwich.SR1</spring-cloud.version>
-	</properties>
+    <name>order-service</name>
+    <description>order service</description>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>${spring.boot.mainclass}</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+    <profiles>
+        <profile>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <id>eda</id>
+            <properties>
+                <spring.boot.mainclass>com.xebia.eda.EdaApplication</spring.boot.mainclass>
+            </properties>
+        </profile>
+        <profile>
+            <id>soa</id>
+            <properties>
+                <spring.boot.mainclass>com.xebia.soa.SoaApplication</spring.boot.mainclass>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

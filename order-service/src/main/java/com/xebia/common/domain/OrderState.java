@@ -1,4 +1,4 @@
-package com.xebia.common.order;
+package com.xebia.common.domain;
 
 public enum OrderState {
     INITIATED,

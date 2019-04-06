@@ -1,8 +1,9 @@
 package com.xebia.eda.controller;
 
-import com.xebia.common.order.Order;
-import com.xebia.common.order.OrderLine;
-import com.xebia.common.order.OrderService;
+import com.xebia.common.domain.Customer;
+import com.xebia.common.domain.Order;
+import com.xebia.common.domain.OrderLine;
+import com.xebia.common.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,7 @@ public class EdaOrderController {
     @PutMapping("/orders/{id}")
     @ResponseBody
     public Order updateOrder(@Valid @RequestBody Order order, Long id) {
-        return orderService.saveOrder(order);
+        return orderService.updateOrder(order, id);
     }
 
     @GetMapping("/orders/{orderId}/lines/{lineId}")
@@ -63,5 +64,30 @@ public class EdaOrderController {
     public OrderLine updateOrderLine(Long orderId, Long lineId, @Valid @RequestBody OrderLine orderline) {
         return orderService.updateOrderLine(orderId, lineId, orderline);
     }
+
+    @GetMapping("/customers/{id}")
+    @ResponseBody
+    public Optional<Customer> getCustomer(Long id) {
+        return orderService.getCustomer(id);
+    }
+
+    @GetMapping("/customers")
+    @ResponseBody
+    public List<Customer> getCustomers() {
+        return orderService.getCustomers();
+    }
+
+    @PostMapping("/customers")
+    @ResponseBody
+    public Customer saveCustomer(@Valid @RequestBody Customer customer) {
+        return orderService.saveCustomer(customer);
+    }
+
+    @PutMapping("/customers/{id")
+    @ResponseBody
+    public Customer updateCustomer(@Valid @RequestBody Customer customer, Long id) {
+        return orderService.updateCustomer(customer, id);
+    }
+
 
 }

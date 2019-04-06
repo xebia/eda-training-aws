@@ -1,8 +1,8 @@
 package com.xebia.soa;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xebia.common.order.DomainSamples;
-import com.xebia.common.order.Order;
+import com.xebia.common.service.DomainSamples;
+import com.xebia.common.domain.Order;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

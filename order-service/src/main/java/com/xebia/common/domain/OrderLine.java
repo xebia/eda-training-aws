@@ -1,6 +1,5 @@
-package com.xebia.common.order;
+package com.xebia.common.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Immutable;
 
 import javax.persistence.*;

@@ -1,4 +1,4 @@
-package com.xebia.common.order;
+package com.xebia.common.domain;
 
 import org.springframework.data.annotation.Immutable;
 
@@ -12,12 +12,14 @@ import java.util.Objects;
 @Table(name = "orders")
 @Immutable
 public class Order {
-    public Order(OrderState status, LocalDateTime created) {
+    public Order(Customer customer, OrderState status, LocalDateTime created) {
+        this.customer = customer;
         this.status = status;
         this.created = created;
     }
 
-    public Order(OrderState status) {
+    public Order(Customer customer, OrderState status) {
+        this.customer = customer;
         this.status = status;
         this.created = LocalDateTime.now();
     }
@@ -27,15 +29,17 @@ public class Order {
     }
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Basic
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
+
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private OrderState status;
-    @Basic
+
     @Column(name = "created")
     private LocalDateTime created;
 
@@ -43,9 +47,7 @@ public class Order {
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private final List<OrderLine> lines = new ArrayList<OrderLine>();
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
 
     public OrderState getStatus() {
         return status;
@@ -55,9 +57,10 @@ public class Order {
         return created;
     }
 
-    public List<OrderLine> getLines() {
-        return lines;
-    }
+    public List<OrderLine> getLines() { return lines; }
+
+    public Customer getCustomer() { return customer; }
+
 
     public Order add(OrderLine orderLine) {
         lines.add(orderLine);
@@ -69,19 +72,26 @@ public class Order {
         return this;
     }
 
+    public Order withCustomer(Customer customer) {
+        this.customer = customer;
+        return this;
+    }
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Order that = (Order) o;
-        return id == that.id &&
-                Objects.equals(status, that.status) &&
-                Objects.equals(created, that.created);
+        Order order = (Order) o;
+        return Objects.equals(id, order.id) &&
+                Objects.equals(customer, order.customer) &&
+                status == order.status &&
+                Objects.equals(created, order.created) &&
+                Objects.equals(lines, order.lines);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, status, created);
+        return Objects.hash(id, customer, status, created, lines);
     }
 }
