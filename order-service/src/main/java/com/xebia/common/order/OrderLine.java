@@ -1,17 +1,30 @@
 package com.xebia.common.order;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Immutable;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "orderline", schema = "orders", catalog = "orders")
+@Table(name = "orderlines")
+@Immutable
 public class OrderLine {
+
+    public OrderLine(int productId, String productName, int itemCount) {
+        this.productId = productId;
+        this.productName = productName;
+        this.itemCount = itemCount;
+    }
+
+    private OrderLine() {
+
+    }
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     @Basic
     @Column(name = "product_id")
     private int productId;
@@ -22,51 +35,20 @@ public class OrderLine {
     @Column(name = "item_count")
     private int itemCount;
 
-    @JsonIgnore
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "order_id", nullable = false, updatable = false)
-    private Order parent;
-
-    public long getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public int getProductId() {
         return productId;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
-
-
-    public Order getParent() {
-        return parent;
-    }
-
-    public void setParent(Order order) {
-        parent = order;
-        order.getLines().add(this);
-    }
-
     public String getProductName() {
         return productName;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
     public int getItemCount() {
         return itemCount;
-    }
-
-    public void setItemCount(int itemCount) {
-        this.itemCount = itemCount;
     }
 
     @Override
@@ -77,12 +59,11 @@ public class OrderLine {
         return id == orderLine.id &&
                 productId == orderLine.productId &&
                 itemCount == orderLine.itemCount &&
-                Objects.equals(productName, orderLine.productName) &&
-                Objects.equals(parent, orderLine.parent);
+                Objects.equals(productName, orderLine.productName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, productId, productName, itemCount, parent);
+        return Objects.hash(id, productId, productName, itemCount);
     }
 }

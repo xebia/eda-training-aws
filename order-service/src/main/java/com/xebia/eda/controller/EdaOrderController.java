@@ -3,6 +3,7 @@ package com.xebia.eda.controller;
 import com.xebia.common.order.Order;
 import com.xebia.common.order.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
@@ -44,7 +45,7 @@ public class EdaOrderController {
     @PutMapping("/orders/{id}")
     @ResponseBody
     public Order updateOrder(@Valid @RequestBody Order order, Long id) {
-        order.setId(id);
+        Assert.isTrue(order.getId() == null || order.getId() == id, "Conflicting order id");
         return repository.save(order);
     }
 

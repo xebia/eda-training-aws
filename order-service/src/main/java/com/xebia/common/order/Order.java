@@ -1,5 +1,7 @@
 package com.xebia.common.order;
 
+import org.springframework.data.annotation.Immutable;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -7,50 +9,50 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "order", schema = "orders", catalog = "orders")
+@Table(name = "orders")
+@Immutable
 public class Order {
+    public Order(OrderState status, LocalDateTime created) {
+        this.status = status;
+        this.created = created;
+    }
+    public Order(OrderState status) {
+        this.status = status;
+        this.created = LocalDateTime.now();
+    }
+
+    private Order() {
+
+    }
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private  Long id;
 
     @Basic
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private  OrderState status;
     @Basic
     @Column(name = "created")
-    private LocalDateTime created;
+    private  LocalDateTime created;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
     private final List<OrderLine> lines = new ArrayList<OrderLine>();
 
-    public long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getStatus() {
+    public OrderState getStatus() {
         return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
-    }
-
-    public List<OrderLine> getLines() {
-        return lines;
-    }
+    public List<OrderLine> getLines() { return lines; }
 
     @Override
     public boolean equals(Object o) {
