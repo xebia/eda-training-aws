@@ -8,7 +8,7 @@ import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
-import com.xebia.common.service.OrderRepository;
+import com.xebia.common.service.ClaimRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -21,12 +21,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @ComponentScan(basePackages = { "com.xebia.common.*", "com.xebia.eda.*" })
 @EntityScan("com.xebia.common.*")
-@EnableJpaRepositories(basePackageClasses = {OrderRepository.class})
-
-public class EdaApplication {
+@EnableJpaRepositories(basePackageClasses = {ClaimRepository.class})
+public class EdaInventoryApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(EdaApplication.class, args);
+        SpringApplication.run(EdaInventoryApplication.class, args);
     }
 
 }

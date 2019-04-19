@@ -1,6 +1,5 @@
 package com.xebia.common.service;
 
-import com.xebia.common.domain.Customer;
 import com.xebia.common.domain.Order;
 import com.xebia.common.domain.OrderLine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,36 +14,12 @@ import java.util.Optional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final CustomerRepository customerRepository;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, CustomerRepository customerRepository) {
+    public OrderService(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
-        this.customerRepository = customerRepository;
     }
 
-    //========== CUSTOMERS ===============//
-    public Optional<Customer> getCustomer(Long id) {
-        return customerRepository.findById(id);
-    }
-
-    public List<Customer> getCustomers() {
-        return customerRepository.findAll();
-    }
-
-    public Customer saveCustomer(Customer customer) {
-        return customerRepository.save(customer);
-    }
-
-    public Customer updateCustomer(Customer customer, Long id) {
-        Assert.isTrue(customer.getId() == null || customer.getId() == id, "Conflicting customer id");
-        return customerRepository.save(customer);
-
-    }
-
-
-
-        //========== ORDERS ===============//
     public Optional<Order> getOrder(Long id) {
         return orderRepository.findById(id);
     }
@@ -54,14 +29,12 @@ public class OrderService {
     }
 
     public Order saveOrder(Order order) {
-        Customer customer = order.getCustomer().getId() == null ? customerRepository.save(order.getCustomer()) : order.getCustomer();
-        return orderRepository.save(order.withCustomer(customer));
+        return orderRepository.save(order);
     }
 
     public Order updateOrder(Order order, Long id) {
         Assert.isTrue((order.getId() == null) || (order.getId() == id), "Conflicting order id");
-        return orderRepository.findById(id).map(saved -> orderRepository.save(order.withCustomer(saved.getCustomer())))
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Order with id %s not found", id)));
+        return orderRepository.save(order);
     }
 
     //========== ORDERLINE ===============//

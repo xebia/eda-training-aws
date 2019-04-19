@@ -1,6 +1,5 @@
 package com.xebia.soa.controller;
 
-import com.xebia.common.domain.Customer;
 import com.xebia.common.domain.Order;
 import com.xebia.common.domain.OrderLine;
 import com.xebia.common.service.OrderService;
@@ -37,6 +36,7 @@ public class SoaOrderController {
     @PostMapping("/orders")
     @ResponseBody
     public Order saveOrder(@Valid @RequestBody Order order) {
+        //TODO: claim inventory
         return orderService.saveOrder(order);
     }
 
@@ -64,29 +64,6 @@ public class SoaOrderController {
         return orderService.updateOrderLine(orderId, lineId, orderline);
     }
 
-    @GetMapping("/customers/{id}")
-    @ResponseBody
-    public Optional<Customer> getCustomer(Long id) {
-        return orderService.getCustomer(id);
-    }
-
-    @GetMapping("/customers")
-    @ResponseBody
-    public List<Customer> getCustomers() {
-        return orderService.getCustomers();
-    }
-
-    @PostMapping("/customers")
-    @ResponseBody
-    public Customer saveCustomer(@Valid @RequestBody Customer customer) {
-        return orderService.saveCustomer(customer);
-    }
-
-    @PutMapping("/customers/{id")
-    @ResponseBody
-    public Customer updateCustomer(@Valid @RequestBody Customer customer, Long id) {
-        return orderService.updateCustomer(customer, id);
-    }
 
 
 }

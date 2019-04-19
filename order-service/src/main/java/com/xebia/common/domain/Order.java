@@ -12,16 +12,18 @@ import java.util.Objects;
 @Table(name = "orders")
 @Immutable
 public class Order {
-    public Order(Customer customer, OrderState status, LocalDateTime created) {
-        this.customer = customer;
+    public Order(Long customerId, OrderState status, Address shippingAddress, LocalDateTime created) {
+        this.customerId = customerId;
         this.status = status;
         this.created = created;
+        this.shippingAddress = shippingAddress;
     }
 
-    public Order(Customer customer, OrderState status) {
-        this.customer = customer;
+    public Order(Long customerId, OrderState status, Address shippingAddress) {
+        this.customerId = customerId;
         this.status = status;
         this.created = LocalDateTime.now();
+        this.shippingAddress = shippingAddress;
     }
 
     private Order() {
@@ -32,9 +34,14 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
+    @Column(name = "customer_id")
+    private Long customerId;
+
+    @Embedded
+    private Address shippingAddress;
+
+    @Column(name = "claim_id")
+    private Long claimId;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -59,8 +66,12 @@ public class Order {
 
     public List<OrderLine> getLines() { return lines; }
 
-    public Customer getCustomer() { return customer; }
+    public Long getCustomerId() { return customerId; }
 
+    public Order withClaim(Long claimId) {
+        this.claimId = claimId;
+        return this;
+    }
 
     public Order add(OrderLine orderLine) {
         lines.add(orderLine);
@@ -72,11 +83,6 @@ public class Order {
         return this;
     }
 
-    public Order withCustomer(Customer customer) {
-        this.customer = customer;
-        return this;
-    }
-
 
     @Override
     public boolean equals(Object o) {
@@ -84,7 +90,7 @@ public class Order {
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
         return Objects.equals(id, order.id) &&
-                Objects.equals(customer, order.customer) &&
+                Objects.equals(customerId, order.customerId) &&
                 status == order.status &&
                 Objects.equals(created, order.created) &&
                 Objects.equals(lines, order.lines);
@@ -92,6 +98,6 @@ public class Order {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customer, status, created, lines);
+        return Objects.hash(id, customerId, status, created, lines);
     }
 }
