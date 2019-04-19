@@ -24,6 +24,7 @@
 
     <modules>
         <module>order-service</module>
+        <module>order-ui</module>
     </modules>
 
     <dependencies>
