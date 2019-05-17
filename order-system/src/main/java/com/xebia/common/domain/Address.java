@@ -5,11 +5,18 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Embeddable
-public class Recipient {
+public class Address {
 
-    @NotNull
-    @Size(max = 100)
-    private String name;
+    public Address() {
+    }
+
+    public Address(String street, String number, String zipCode, String city, String country) {
+        this.street = street;
+        this.city = city;
+        this.number = number;
+        this.country = country;
+        this.zipCode = zipCode;
+    }
 
     @NotNull
     @Size(max = 100)
@@ -31,17 +38,6 @@ public class Recipient {
     @Size(max = 100)
     private String country;
 
-    public Recipient() {
-    }
-
-    public Recipient(String name, String street, String number, String zipCode, String city, String country) {
-        this.name = name;
-        this.street = street;
-        this.city = city;
-        this.number = number;
-        this.country = country;
-        this.zipCode = zipCode;
-    }
 
     public String getStreet() {
         return street;
@@ -62,9 +58,4 @@ public class Recipient {
     public String getCountry() {
         return country;
     }
-
-    public String getName() {
-        return name;
-    }
-
 }

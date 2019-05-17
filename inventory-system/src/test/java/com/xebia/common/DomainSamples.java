@@ -12,7 +12,7 @@ public class DomainSamples {
 
 
     public static Shipment createShipment(int itemCount) {
-        Recipient recipient = new Recipient("Johnny", "Holiday", "Sunsetroad", "3", "AD2345", "Delft", "Netherlands");
+        Recipient recipient = new Recipient("Johnny Holiday", "Sunsetroad", "3", "AD2345", "Delft", "Netherlands");
         List<InventoryItem> items = IntStream.rangeClosed(1, itemCount)
                 .boxed()
                 .map(i -> new InventoryItem(1000 + i, i))

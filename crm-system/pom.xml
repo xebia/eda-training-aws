@@ -6,7 +6,7 @@
         <groupId>com.xebia</groupId>
         <artifactId>parent</artifactId>
         <version>1.0.0</version>
-        <relativePath>..</relativePath> <!-- lookup parent from customerRepository -->
+        <relativePath>..</relativePath> <!-- lookup parent from customerViewRepository -->
     </parent>
     <groupId>com.xebia</groupId>
     <artifactId>crm-system</artifactId>

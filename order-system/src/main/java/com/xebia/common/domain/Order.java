@@ -40,9 +40,6 @@ public class Order {
     @Embedded
     private Address shippingAddress;
 
-    @Column(name = "claim_id")
-    private Long claimId;
-
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private OrderState status;
@@ -68,11 +65,6 @@ public class Order {
 
     public Long getCustomerId() { return customerId; }
 
-    public Order withClaim(Long claimId) {
-        this.claimId = claimId;
-        return this;
-    }
-
     public Order add(OrderLine orderLine) {
         lines.add(orderLine);
         return this;
@@ -80,6 +72,11 @@ public class Order {
 
     public Order remove(Long orderLineId) {
         lines.removeIf(l -> l.getId() == orderLineId);
+        return this;
+    }
+
+    public Order withStatus(OrderState status) {
+        this.status = status;
         return this;
     }
 
@@ -99,5 +96,9 @@ public class Order {
     @Override
     public int hashCode() {
         return Objects.hash(id, customerId, status, created, lines);
+    }
+
+    public Address getShippingAddress() {
+        return shippingAddress;
     }
 }
