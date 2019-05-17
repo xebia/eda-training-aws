@@ -1,9 +1,8 @@
 package com.xebia.soa.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xebia.common.domain.Claim;
-import com.xebia.common.domain.ProductClaim;
+import com.xebia.common.domain.Shipment;
+import com.xebia.common.domain.InventoryItem;
 import com.xebia.soa.SoaInventoryApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +18,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
-import static com.xebia.common.DomainSamples.createProductClaims;
+import static com.xebia.common.DomainSamples.createShipment;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,17 +39,17 @@ public class SoaInventoryControllerTests {
     ObjectMapper mapper;
 
     @Test
-    public void shouldClaimInventory() throws Exception {
-        List<ProductClaim> orderLines = createProductClaims(3);
-        MvcResult response = mockMvc.perform(post("/inventory-api/v1/claims")
+    public void shouldCreateShipment() throws Exception {
+        Shipment shipment = createShipment(3);
+        MvcResult response = mockMvc.perform(post("/inventory-api/v1/shipments")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(orderLines))
+                .content(mapper.writeValueAsString(shipment))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Claim inserted = mapper.readValue(response.getResponse().getContentAsString(), Claim.class);
-        assertEquals(inserted.getClaims().size(), 3);
+        Shipment inserted = mapper.readValue(response.getResponse().getContentAsString(), Shipment.class);
+        assertEquals(inserted.getItems().size(), 3);
     }
 
 }

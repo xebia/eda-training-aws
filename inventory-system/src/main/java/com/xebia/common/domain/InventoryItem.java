@@ -6,16 +6,17 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "claims")
+@Table(name = "inventoryitems")
 @Immutable
-public class ProductClaim {
+public class InventoryItem {
 
-    public ProductClaim(int productId,  int itemCount) {
+
+    public InventoryItem(int productId, int itemCount) {
         this.productId = productId;
         this.itemCount = itemCount;
     }
 
-    private ProductClaim() {
+    private InventoryItem() {
 
     }
 
@@ -42,7 +43,7 @@ public class ProductClaim {
         return itemCount;
     }
 
-    public ProductClaim withId(Long id) {
+    public InventoryItem withId(Long id) {
         this.id = id;
         return this;
     }
@@ -51,7 +52,7 @@ public class ProductClaim {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProductClaim orderLine = (ProductClaim) o;
+        InventoryItem orderLine = (InventoryItem) o;
         return id == orderLine.id &&
                 productId == orderLine.productId &&
                 itemCount == orderLine.itemCount ;
