@@ -23,10 +23,10 @@
     </properties>
 
     <modules>
-        <module>order-service</module>
+        <module>order-system</module>
         <module>order-ui</module>
-        <module>customer-service</module>
-        <module>inventory-service</module>
+        <module>crm-system</module>
+        <module>inventory-system</module>
     </modules>
 
     <dependencies>

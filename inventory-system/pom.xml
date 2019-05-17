@@ -6,14 +6,14 @@
         <groupId>com.xebia</groupId>
         <artifactId>parent</artifactId>
         <version>1.0.0</version>
-        <relativePath>..</relativePath> <!-- lookup parent from customerRepository -->
+        <relativePath>..</relativePath> <!-- lookup parent from inventoryRepository -->
     </parent>
     <groupId>com.xebia</groupId>
-    <artifactId>customer-service</artifactId>
+    <artifactId>inventory-system</artifactId>
     <version>1.0.0</version>
 
-    <name>customer-service</name>
-    <description>customer service</description>
+    <name>inventory-system</name>
+    <description>inventory system</description>
 
     <build>
         <plugins>
@@ -54,13 +54,13 @@
             </activation>
             <id>eda</id>
             <properties>
-                <spring.boot.mainclass>com.xebia.eda.EdaCustomerApplication</spring.boot.mainclass>
+                <spring.boot.mainclass>com.xebia.eda.EdaInventoryApplication</spring.boot.mainclass>
             </properties>
         </profile>
         <profile>
             <id>soa</id>
             <properties>
-                <spring.boot.mainclass>com.xebia.soa.SoaCustomerApplication</spring.boot.mainclass>
+                <spring.boot.mainclass>com.xebia.soa.SoaInventoryApplication</spring.boot.mainclass>
             </properties>
         </profile>
     </profiles>
