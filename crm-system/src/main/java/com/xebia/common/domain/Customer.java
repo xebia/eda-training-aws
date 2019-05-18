@@ -2,12 +2,7 @@ package com.xebia.common.domain;
 
 import org.springframework.data.annotation.Immutable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -18,17 +13,22 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(String name, String email, String mobile, boolean notificationEmail, boolean notificationText) {
+    public Customer(String name, String email, String mobile, boolean notificationEmail, boolean notificationText, Address address) {
         this.name = name;
         this.email = email;
         this.mobile = mobile;
         this.notificationEmail = notificationEmail;
         this.notificationText = notificationText;
+        this.address = address;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Embedded
+    private Address address;
+
 
     @Column(name = "name")
     private String name;
@@ -69,6 +69,10 @@ public class Customer {
         return notificationText;
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -77,6 +81,7 @@ public class Customer {
         return notificationEmail == customer.notificationEmail &&
                 notificationText == customer.notificationText &&
                 Objects.equals(id, customer.id) &&
+                Objects.equals(address, customer.address) &&
                 Objects.equals(name, customer.name) &&
                 Objects.equals(email, customer.email) &&
                 Objects.equals(mobile, customer.mobile);
@@ -84,6 +89,19 @@ public class Customer {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, mobile, notificationEmail, notificationText);
+        return Objects.hash(id, address, name, email, mobile, notificationEmail, notificationText);
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", address=" + address +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", notificationEmail=" + notificationEmail +
+                ", notificationText=" + notificationText +
+                '}';
     }
 }

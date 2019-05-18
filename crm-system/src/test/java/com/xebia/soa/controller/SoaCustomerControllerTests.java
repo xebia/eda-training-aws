@@ -3,13 +3,11 @@ package com.xebia.soa.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xebia.common.DomainSamples;
 import com.xebia.common.domain.Customer;
-import com.xebia.soa.SoaCustomerApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -23,8 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-@SpringBootTest(classes = {SoaCustomerApplication.class})
-@ComponentScan(basePackages = { "com.xebia.common.*", "com.xebia.soa.*" })
+@SpringBootTest
 @ActiveProfiles({"default", "test"})
 public class SoaCustomerControllerTests {
 

@@ -1,6 +1,6 @@
 package com.xebia.soa.service;
 
-import com.xebia.common.domain.Address;
+import com.xebia.common.domain.ShippingAddress;
 import com.xebia.common.domain.Customer;
 import com.xebia.common.domain.Order;
 import org.slf4j.Logger;
@@ -37,10 +37,10 @@ public class ExternalInventoryService {
     }
 
     public static ShipmentDto convertToShipment(Customer customer, Order order) {
-        Address shippingAddress = order.getShippingAddress();
-        RecipientDto recipientDto = new RecipientDto(customer.getName(), shippingAddress.getStreet(), shippingAddress.getNumber(), shippingAddress.getZipCode(), shippingAddress.getCity(), shippingAddress.getCountry());
+        ShippingAddress shippingAddress = order.getShippingAddress();
+        ShipmentAddressDto shipmentAddressDto = new ShipmentAddressDto(customer.getName(), shippingAddress.getStreet(), shippingAddress.getNumber(), shippingAddress.getZipCode(), shippingAddress.getCity(), shippingAddress.getCountry());
         List<InventoryItemDto> items = order.getLines().stream().map(i -> new InventoryItemDto(i.getProductId(), i.getItemCount())).collect(Collectors.toList());
-        return new ShipmentDto(order.getId(), recipientDto, items);
+        return new ShipmentDto(order.getId(), shipmentAddressDto, items);
     }
 }
 
@@ -48,16 +48,16 @@ class ShipmentDto {
 
     private Long id;
     private Long orderId;
-    private RecipientDto recipient;
+    private ShipmentAddressDto shipmentAddress;
     private List<InventoryItemDto> items;
 
     public ShipmentDto() {
 
     }
 
-    public ShipmentDto(@NotNull Long orderId, RecipientDto recipient, List<InventoryItemDto> items) {
+    public ShipmentDto(@NotNull Long orderId, ShipmentAddressDto shipmentAddress, List<InventoryItemDto> items) {
         this.orderId = orderId;
-        this.recipient = recipient;
+        this.shipmentAddress = shipmentAddress;
         this.items = items;
     }
 
@@ -65,8 +65,8 @@ class ShipmentDto {
         return orderId;
     }
 
-    public RecipientDto getRecipient() {
-        return recipient;
+    public ShipmentAddressDto getShipmentAddress() {
+        return shipmentAddress;
     }
 
     public List<InventoryItemDto> getItems() {
@@ -78,16 +78,20 @@ class ShipmentDto {
     }
 }
 
-class RecipientDto {
+class ShipmentAddressDto {
 
-    private final String name;
-    private final String street;
-    private final String number;
-    private final String zipCode;
-    private final String city;
-    private final String country;
+    private String name;
+    private String street;
+    private String number;
+    private String zipCode;
+    private String city;
+    private String country;
 
-    public RecipientDto(String name,String street, String number, String zipCode, String city, String country) {
+    public ShipmentAddressDto() {
+
+    }
+
+    public ShipmentAddressDto(String name, String street, String number, String zipCode, String city, String country) {
         this.name = name;
         this.street = street;
         this.city = city;
@@ -124,8 +128,12 @@ class RecipientDto {
 
 class InventoryItemDto {
 
-    private final int productId;
-    private final int itemCount;
+    private int productId;
+    private int itemCount;
+
+    public InventoryItemDto() {
+
+    }
 
     public InventoryItemDto(int productId, int itemCount) {
         this.productId = productId;

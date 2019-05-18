@@ -26,10 +26,10 @@ public class NotificationService {
     private void pretendSending(Customer customer, Order order) {
         String message = notificationMessage(order);
         if (customer.isNotificationEmail()) {
-            LOGGER.info(String.format("Sent email for %s to %s that %s", customer.getName(), customer.getEmail(), message));
+            LOGGER.info(String.format("Sent email for %s to %s with invoice. Message:  %s", customer.getName(), customer.getEmail(), message));
         }
         if (customer.isNotificationText()) {
-            LOGGER.info(String.format("Sent SMS for %s to %s that %s", customer.getName(), customer.getMobile(), message));
+            LOGGER.info(String.format("Sent SMS for %s to %s. Message: %s", customer.getName(), customer.getMobile(), message));
 
         }
 

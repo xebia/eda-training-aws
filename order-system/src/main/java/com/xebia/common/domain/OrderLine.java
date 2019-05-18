@@ -3,6 +3,7 @@ package com.xebia.common.domain;
 import org.springframework.data.annotation.Immutable;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
@@ -10,10 +11,11 @@ import java.util.Objects;
 @Immutable
 public class OrderLine {
 
-    public OrderLine(int productId, String productName, int itemCount) {
+    public OrderLine(int productId, String productName, int itemCount, int priceCents) {
         this.productId = productId;
         this.productName = productName;
         this.itemCount = itemCount;
+        this.priceCents = priceCents;
     }
 
     private OrderLine() {
@@ -34,6 +36,10 @@ public class OrderLine {
     @Column(name = "item_count")
     private int itemCount;
 
+    @Basic
+    @Column(name = "price_cents")
+    private  int priceCents;
+
     public Long getId() {
         return id;
     }
@@ -50,8 +56,14 @@ public class OrderLine {
         return itemCount;
     }
 
+    public int getPriceCents() {
+        return priceCents;
+    }
+
+
+
     public boolean sameContent(OrderLine orderLine) {
-        return orderLine.getProductId() == productId && orderLine.getProductName().equals(productName) && orderLine.getItemCount() == itemCount;
+        return priceCents == orderLine.getPriceCents() && orderLine.getProductId() == productId && orderLine.getProductName().equals(productName) && orderLine.getItemCount() == itemCount;
 
     }
 
@@ -65,14 +77,26 @@ public class OrderLine {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderLine orderLine = (OrderLine) o;
-        return id == orderLine.id &&
-                productId == orderLine.productId &&
+        return productId == orderLine.productId &&
                 itemCount == orderLine.itemCount &&
+                priceCents == orderLine.priceCents &&
+                Objects.equals(id, orderLine.id) &&
                 Objects.equals(productName, orderLine.productName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, productId, productName, itemCount);
+        return Objects.hash(id, productId, productName, itemCount, priceCents);
+    }
+
+    @Override
+    public String toString() {
+        return "OrderLine{" +
+                "id=" + id +
+                ", productId=" + productId +
+                ", productName='" + productName + '\'' +
+                ", itemCount=" + itemCount +
+                ", priceCents=" + priceCents +
+                '}';
     }
 }

@@ -62,4 +62,13 @@ public class InventoryItem {
     public int hashCode() {
         return Objects.hash(id, productId, itemCount);
     }
+
+    @Override
+    public String toString() {
+        return "InventoryItem{" +
+                "id=" + id +
+                ", productId=" + productId +
+                ", itemCount=" + itemCount +
+                '}';
+    }
 }

@@ -23,7 +23,7 @@ public class EdaCustomerController {
 
     @GetMapping("/customers/{id}")
     @ResponseBody
-    public Optional<Customer> getCustomer(Long id) {
+    public Optional<Customer> getCustomer(@PathVariable("id") Long id) {
         return customerService.getCustomer(id);
     }
 
@@ -41,7 +41,7 @@ public class EdaCustomerController {
 
     @PutMapping("/customers/{id")
     @ResponseBody
-    public Customer updateCustomer(@Valid @RequestBody Customer customer, Long id) {
+    public Customer updateCustomer(@Valid @RequestBody Customer customer, @PathVariable("id") Long id) {
         return customerService.updateCustomer(customer, id);
     }
 

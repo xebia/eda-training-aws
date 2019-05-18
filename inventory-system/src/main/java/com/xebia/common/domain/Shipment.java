@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "shipments")
@@ -24,7 +25,7 @@ public class Shipment {
     private LocalDateTime shipmentDate;
 
     @Embedded
-    private Recipient recipient;
+    private ShipmentAddress shipmentAddress;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "item_id", referencedColumnName = "id")
@@ -33,9 +34,9 @@ public class Shipment {
     public Shipment() {
     }
 
-    public Shipment(@NotNull Long orderId, Recipient recipient, List<InventoryItem> items) {
+    public Shipment(@NotNull Long orderId, ShipmentAddress shipmentAddress, List<InventoryItem> items) {
         this.orderId = orderId;
-        this.recipient = recipient;
+        this.shipmentAddress = shipmentAddress;
         this.items = items;
     }
 
@@ -51,6 +52,10 @@ public class Shipment {
         return orderId;
     }
 
+    public ShipmentAddress getShipmentAddress() {
+        return shipmentAddress;
+    }
+
     public Shipment withId(Long id) {
         this.id = id;
         return this;
@@ -61,5 +66,31 @@ public class Shipment {
         return this;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Shipment shipment = (Shipment) o;
+        return Objects.equals(id, shipment.id) &&
+                Objects.equals(orderId, shipment.orderId) &&
+                Objects.equals(shipmentDate, shipment.shipmentDate) &&
+                Objects.equals(shipmentAddress, shipment.shipmentAddress) &&
+                Objects.equals(items, shipment.items);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, orderId, shipmentDate, shipmentAddress, items);
+    }
+
+    @Override
+    public String toString() {
+        return "Shipment{" +
+                "id=" + id +
+                ", orderId=" + orderId +
+                ", shipmentDate=" + shipmentDate +
+                ", shipmentAddress=" + shipmentAddress +
+                ", items=" + items +
+                '}';
+    }
 }

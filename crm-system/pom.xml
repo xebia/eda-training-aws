@@ -54,7 +54,7 @@
             </activation>
             <id>eda</id>
             <properties>
-                <spring.boot.mainclass>com.xebia.eda.EdaCustomerApplication</spring.boot.mainclass>
+                <spring.boot.mainclass>com.xebia.EdaCustomerApplication</spring.boot.mainclass>
             </properties>
         </profile>
         <profile>

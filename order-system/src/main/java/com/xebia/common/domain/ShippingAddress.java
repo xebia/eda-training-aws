@@ -6,12 +6,12 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Embeddable
-public class Address {
+public class ShippingAddress {
 
-    public Address() {
+    public ShippingAddress() {
     }
 
-    public Address(String street, String number, String zipCode, String city, String country) {
+    public ShippingAddress(String street, String number, String zipCode, String city, String country) {
         this.street = street;
         this.city = city;
         this.number = number;
@@ -65,7 +65,7 @@ public class Address {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Address address = (Address) o;
+        ShippingAddress address = (ShippingAddress) o;
         return Objects.equals(street, address.street) &&
                 Objects.equals(number, address.number) &&
                 Objects.equals(zipCode, address.zipCode) &&

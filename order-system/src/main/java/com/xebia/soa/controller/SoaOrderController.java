@@ -2,6 +2,7 @@ package com.xebia.soa.controller;
 
 import com.xebia.common.domain.Customer;
 import com.xebia.common.domain.Order;
+import com.xebia.common.domain.OrderState;
 import com.xebia.soa.service.ExternalCustomerService;
 import com.xebia.soa.service.ExternalInventoryService;
 import com.xebia.common.service.NotificationService;
@@ -50,7 +51,7 @@ public class SoaOrderController {
     @PostMapping("/orders")
     @ResponseBody
     public Order saveOrder(@Valid @RequestBody Order order) {
-        Order saved = orderService.saveOrder(order);
+        Order saved = orderService.saveOrder(order.withStatus(OrderState.INITIATED).withCreatedNow());
         Customer customer = externalCustomerService.getCustomer(order.getCustomerId());
         externalInventoryService.initiateShipment(customer, saved);
         notificationService.notifyCustomer(customer, saved);
@@ -63,11 +64,11 @@ public class SoaOrderController {
      */
     @PatchMapping("/orders/{id}")
     @ResponseBody
-    public Order patchOrder(@Valid @RequestBody Order order, Long id) {
+    public Order patchOrder(@Valid @RequestBody Order order, @PathVariable("id") Long id) {
         Optional<Order> saved = orderService.getOrder(id);
         return saved.map(o -> {
             Order patched = orderService.updateOrder(o.withStatus(order.getStatus()), id);
-            Customer customer = externalCustomerService.getCustomer(order.getCustomerId());
+            Customer customer = externalCustomerService.getCustomer(o.getCustomerId());
             notificationService.notifyCustomer(customer, patched);
             return patched;
         }).orElseThrow(() -> new IllegalArgumentException(String.format("Order with id %s not found", id)));

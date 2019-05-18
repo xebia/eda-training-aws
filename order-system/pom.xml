@@ -89,7 +89,7 @@
         <profile>
             <id>soa</id>
             <properties>
-                <spring.boot.mainclass>com.xebia.soa.SoaOrderApplication</spring.boot.mainclass>
+                <spring.boot.mainclass>com.xebia.OrderApplication</spring.boot.mainclass>
             </properties>
         </profile>
     </profiles>

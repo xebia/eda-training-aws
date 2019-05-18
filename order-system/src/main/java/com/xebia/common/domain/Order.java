@@ -12,14 +12,14 @@ import java.util.Objects;
 @Table(name = "orders")
 @Immutable
 public class Order {
-    public Order(Long customerId, OrderState status, Address shippingAddress, LocalDateTime created) {
+    public Order(Long customerId, OrderState status, ShippingAddress shippingAddress, LocalDateTime created) {
         this.customerId = customerId;
         this.status = status;
         this.created = created;
         this.shippingAddress = shippingAddress;
     }
 
-    public Order(Long customerId, OrderState status, Address shippingAddress) {
+    public Order(Long customerId, OrderState status, ShippingAddress shippingAddress) {
         this.customerId = customerId;
         this.status = status;
         this.created = LocalDateTime.now();
@@ -38,7 +38,7 @@ public class Order {
     private Long customerId;
 
     @Embedded
-    private Address shippingAddress;
+    private ShippingAddress shippingAddress;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -65,6 +65,10 @@ public class Order {
 
     public Long getCustomerId() { return customerId; }
 
+    public ShippingAddress getShippingAddress() {
+        return shippingAddress;
+    }
+
     public Order add(OrderLine orderLine) {
         lines.add(orderLine);
         return this;
@@ -80,14 +84,22 @@ public class Order {
         return this;
     }
 
+    public Order withCreatedNow() {
+        this.created = LocalDateTime.now();
+        return this;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {
+
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
         return Objects.equals(id, order.id) &&
                 Objects.equals(customerId, order.customerId) &&
+                Objects.equals(shippingAddress, order.shippingAddress) &&
                 status == order.status &&
                 Objects.equals(created, order.created) &&
                 Objects.equals(lines, order.lines);
@@ -95,10 +107,18 @@ public class Order {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customerId, status, created, lines);
+        return Objects.hash(id, customerId, shippingAddress, status, created, lines);
     }
 
-    public Address getShippingAddress() {
-        return shippingAddress;
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", customerId=" + customerId +
+                ", shippingAddress=" + shippingAddress +
+                ", status=" + status +
+                ", created=" + created +
+                ", lines=" + lines +
+                '}';
     }
 }

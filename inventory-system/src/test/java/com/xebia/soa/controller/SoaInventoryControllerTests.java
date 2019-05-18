@@ -2,21 +2,16 @@ package com.xebia.soa.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xebia.common.domain.Shipment;
-import com.xebia.common.domain.InventoryItem;
-import com.xebia.soa.SoaInventoryApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import java.util.List;
 
 import static com.xebia.common.DomainSamples.createShipment;
 import static org.junit.Assert.assertEquals;
@@ -26,8 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-@SpringBootTest(classes = {SoaInventoryApplication.class})
-@ComponentScan(basePackages = { "com.xebia.common.*", "com.xebia.soa.*" })
+@SpringBootTest
 @ActiveProfiles({"default", "test"})
 public class SoaInventoryControllerTests {
 

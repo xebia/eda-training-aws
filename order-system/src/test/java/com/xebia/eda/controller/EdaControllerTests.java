@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-@ComponentScan(basePackages = { "com.xebia.common.*", "com.xebia.eda.*" })
 @ActiveProfiles({"default", "test"})
 public class EdaControllerTests {
 

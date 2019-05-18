@@ -37,12 +37,6 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public Order patchOrder(Order order, Long id) {
-        Assert.isTrue((order.getId() == null) || (order.getId() == id), "Conflicting order id");
-        return orderRepository.save(order);
-    }
-
-
     //========== ORDERLINE ===============//
 
     public Optional<OrderLine> getOrderLine(Long orderId, Long lineId) {

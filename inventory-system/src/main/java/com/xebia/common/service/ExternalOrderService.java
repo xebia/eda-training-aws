@@ -1,10 +1,9 @@
 package com.xebia.common.service;
 
-import com.xebia.common.domain.Shipment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,10 +14,12 @@ import java.util.Map;
 public class ExternalOrderService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExternalOrderService.class);
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
     private final String orderSystemUri;
 
-    public ExternalOrderService(@Value("${order.system.uri}") String orderSystemUri) {
+    @Autowired
+    public ExternalOrderService(RestTemplate restTemplate, @Value("${order.system.uri}") String orderSystemUri) {
+        this.restTemplate = restTemplate;
         this.orderSystemUri = orderSystemUri;
     }
 
@@ -27,7 +28,8 @@ public class ExternalOrderService {
         body.put("id", orderId);
         body.put("status", "SHIPPED");
         try {
-            restTemplate.patchForObject(orderSystemUri + "/orders/" + orderId, body, Map.class, new HashMap());
+            restTemplate.patchForObject(orderSystemUri + "/order-api/v1/orders/" + orderId, body, Map.class, new HashMap());
+            LOGGER.info("Notify Order service that order with id=[{}] is shipped", orderId);
         } catch (Exception ex) {
             LOGGER.error("Could not notify Order service of shipment due to=[{}]", ex.getMessage(), ex);
         }

@@ -26,7 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-@ComponentScan(basePackages = { "com.xebia.common.*", "com.xebia.soa.*" })
 @ActiveProfiles({"default", "test"})
 public class SoaControllerTests {
 
@@ -40,6 +39,7 @@ public class SoaControllerTests {
     @Test
     public void shouldInsertOrder() throws Exception {
         Order order = DomainSamples.createInitialOrder(5);
+        System.out.println(mapper.writeValueAsString(order));
         MvcResult response = mockMvc.perform(post("/order-api/v1/orders")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(order))
@@ -50,6 +50,7 @@ public class SoaControllerTests {
         Order inserted = mapper.readValue(response.getResponse().getContentAsString(), Order.class);
         assertEquals(order.getStatus(), inserted.getStatus());
         assertEquals(order.getLines().size(), inserted.getLines().size());
+        System.out.println(response.getResponse().getContentAsString());
     }
 
 }
@@ -64,7 +65,7 @@ class DummyServicesConfig {
         return new ExternalCustomerService("dummy-uri") {
             @Override
             public Customer getCustomer(Long id) {
-                return new Customer("Johny Holiday", "abc@efg.nl", "0612345678", true, true);
+                return DomainSamples.CUSTOMER_1;
             }
         };
     }

@@ -1,7 +1,7 @@
 version: '2.1'
 
 services:
-  orders-db:
+  order-db:
     image: postgres:9.6
     environment:
       - POSTGRES_USER=orders
@@ -14,30 +14,29 @@ services:
       retries: 5
     ports:
       - 5432:5432
-
-#  mnv-stub:
-#    image: 280925583500.dkr.ecr.eu-central-1.amazonaws.com/mnv-support-stub:latest
-#    depends_on:
-#      postgres:
-#        condition: service_healthy
-#    volumes:
-#      - ~/.aws:/root/.aws:ro
-#    environment:
-#      - SPRING_DATASOURCE_PASSWORD=supergeheim
-#      - AWS_CONTAINER_CREDENTIALS_RELATIVE_URI=${AWS_CONTAINER_CREDENTIALS_RELATIVE_URI:-/latest/meta-data/iam/security-credentials}
-#    ports:
-#      - "8080:8080"
-#
-#  mijn-nummervermelding:
-#    image: 280925583500.dkr.ecr.eu-central-1.amazonaws.com/mijn-nummervermelding:latest
-#    depends_on:
-#      postgres:
-#        condition: service_healthy
-#    environment:
-#      - PROFILE=noaws
-#      - SPRING_DATASOURCE_PASSWORD=supergeheim
-#      - AWS_CONTAINER_CREDENTIALS_RELATIVE_URI=${AWS_CONTAINER_CREDENTIALS_RELATIVE_URI:-/latest/meta-data/iam/security-credentials}
-#    volumes:
-#      - ~/.aws:/home/mijn-nummervermelding/.aws:ro
-#    ports:
-#      - "8443:8443"
+  inventory-db:
+    image: postgres:9.6
+    environment:
+    - POSTGRES_USER=inventory
+    - POSTGRES_PASSWORD=supergeheim
+    - POSTGRES_DB=inventory
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "orders"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+    - 5431:5432
+  crm-db:
+    image: postgres:9.6
+    environment:
+    - POSTGRES_USER=crm
+    - POSTGRES_PASSWORD=supergeheim
+    - POSTGRES_DB=crm
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "orders"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+    - 5430:5432
