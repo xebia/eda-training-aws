@@ -1,6 +1,6 @@
 # eda-training-aws
 
-###Startup environment
+### Startup environment
 #### Application environment
 - `docker-compose up`
 
@@ -10,7 +10,7 @@
 - `TMPDIR=/private$TMPDIR docker-compose up -d`
 
 
-###Start Application
+### Start Application
 #### UI
 - Open browser on URL: `http://localhost:9000/`
 - Manually insert an order: 
@@ -20,7 +20,7 @@ curl -X POST --data '{"customerId": 1,"shippingAddress": {"street": "Sesamstreet
 
 
  
-###Build Docker
+### Build Docker
 #### Push Docker image 
 
 1. On Mac only: Expose demon without TLS
