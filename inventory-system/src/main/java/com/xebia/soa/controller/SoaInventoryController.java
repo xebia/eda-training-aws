@@ -48,7 +48,7 @@ public class SoaInventoryController {
                 externalOrderService.notifyOrderShipped(shipment.getOrderId());
             }
         }, shipped);
-        LOGGER.info("Scheduled order shipped in {}", shipped);
+        LOGGER.info("Scheduled order with id=[" + shipment.getOrderId() + "] to be shipped in {}", shipped);
         return inventoryService.saveShipment(shipment.withShipmentDate(shipmentDate));
     }
 

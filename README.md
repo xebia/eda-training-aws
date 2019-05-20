@@ -9,9 +9,19 @@
 - `cd localstack`
 - `TMPDIR=/private$TMPDIR docker-compose up -d`
 
+
+###Start Application
+#### UI
+- Open browser on URL: `http://localhost:9000/`
+- Manually insert an order: 
+```
+curl -X POST --data '{"customerId": 1,"shippingAddress": {"street": "Sesamstreet","number": "5b","zipCode": "3456AB","city": "Amsterdam","country": "Netherlands"   },   "lines": [{"productId": 1001,"productName": "Fancy Gadget #1","itemCount": 1,"priceCents": 100},{"productId": 1002,"productName": "Fancy Gadget #2","itemCount": 2,"priceCents": 200},{"productId": 1003,"productName": "Fancy Gadget #3","itemCount": 3,"priceCents": 300},{"productId": 1004,"productName": "Fancy Gadget #4","itemCount": 4,"priceCents": 400},{"productId": 1005,"productName": "Fancy Gadget #5","itemCount": 5,"priceCents": 500}   ] }' http://localhost:9000/order-api/v1/orders --header "Content-Type:application/json"
+```
+
+
  
 ###Build Docker
-## Push Docker image 
+#### Push Docker image 
 
 1. On Mac only: Expose demon without TLS
 
@@ -37,12 +47,17 @@ The `docker-account-name` is defined as env variable in the parent `pom.xml` as:
 ```
 
 3a. Build and push an image in a sub-project
-
 - `cd crm-system`
 - ` mvn install dockerfile:build dockerfile:push`
 
-3b. Push all images
-- from project root:
+3b. Build and push all images
+From project root:
+- Build images locally
+```properties
+mvn install
+```
+
+- Push images
 ```properties
 mvn -Dmaven.deploy.skip deploy
 ```

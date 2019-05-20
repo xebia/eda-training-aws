@@ -69,10 +69,6 @@
                         <goals>
                             <goal>tag</goal>
                         </goals>
-                        <configuration>
-                            <image>${project.artifactId}:${project.version}</image>
-                            <newName>${docker.image.prefix}/${project.artifactId}:${project.version}</newName>
-                        </configuration>
                     </execution>
                     <execution>
                         <id>push-image</id>
@@ -80,9 +76,6 @@
                         <goals>
                             <goal>push</goal>
                         </goals>
-                        <configuration>
-                            <imageName>${docker.image.prefix}/${project.artifactId}:${project.version}</imageName>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

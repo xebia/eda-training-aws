@@ -9,6 +9,7 @@ import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.xebia.common.domain.Address;
 import com.xebia.common.domain.Customer;
 import com.xebia.common.service.CustomerRepository;
@@ -82,9 +83,9 @@ class DataLoader implements ApplicationRunner {
                 new Customer("Dave Burk", "dave@burk.nl", "0612345679", true, false, new Address("Beathovenlaan", "4", "4532AB", "Rotterdam", "Netherlands")),
                 new Customer("Jane Swam", "jane@hij.nl", "0612345680", false, true, new Address("Sunset Avenue", "4", "4455EF", "Utrecht", "Netherlands")));
         java.util.List<Customer> loaded = customerRepository.saveAll(customers);
+        LOGGER.info("Loaded " + customers.size() + " initial Customers:\n" + loaded.stream().map(i -> i.toString() + "\n").collect(Collectors.toList()));
 
-        LOGGER.info("Loaded \n" + loaded.stream().map(i -> i.toString() + "\n").collect(Collectors.toList()));
-
-        LOGGER.info(mapper.writeValueAsString(customers));
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        LOGGER.info("Loaded " + customers.size() + " initial Customers as json :\n" + mapper.writeValueAsString(customers));
     }
 }

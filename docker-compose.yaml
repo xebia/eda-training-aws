@@ -15,11 +15,11 @@ services:
     ports:
       - 5432:5432
   order-system:
-    image: upeter/order-system
+    image: upeter/order-system:latest
     environment:
     - INVENTORY_SYSTEM_URI=http://inventory-system:9010
     - CRM_SYSTEM_URI=http://crm-system:9020
-    - DB_HOST_PORT=order-db:5432
+    - SPRING_DATASOURCE_URL=jdbc:postgresql://order-db:5432/orders
     depends_on:
       order-db:
         condition: service_healthy
@@ -39,10 +39,10 @@ services:
     ports:
     - 5431:5432
   inventory-system:
-    image: upeter/inventory-system
+    image: upeter/inventory-system:latest
     environment:
     - ORDER_SYSTEM_URI=http://order-system:9000
-    - DB_HOST_PORT=order-db:5431
+    - SPRING_DATASOURCE_URL=jdbc:postgresql://inventory-db:5432/inventory
     depends_on:
       inventory-db:
         condition: service_healthy
@@ -62,9 +62,9 @@ services:
     ports:
     - 5430:5432
   crm-system:
-    image: upeter/crm-system
+    image: upeter/crm-system:latest
     environment:
-    - DB_HOST_PORT=order-db:5430
+    - SPRING_DATASOURCE_URL=jdbc:postgresql://crm-db:5432/crm
     depends_on:
       crm-db:
         condition: service_healthy
