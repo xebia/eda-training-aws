@@ -60,7 +60,7 @@
                 <configuration>
                     <!--<mainClass>${start-class}</mainClass>-->
                     <layout>JAR</layout>
-                    <mainClass>${spring.boot.mainclass}</mainClass>
+                    <mainClass>com.xebia.OrderApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
@@ -75,23 +75,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <id>eda</id>
-            <properties>
-                <spring.boot.mainclass>com.xebia.eda.EdaOrderApplication</spring.boot.mainclass>
-            </properties>
-        </profile>
-        <profile>
-            <id>soa</id>
-            <properties>
-                <spring.boot.mainclass>com.xebia.OrderApplication</spring.boot.mainclass>
-            </properties>
-        </profile>
-    </profiles>
 
 </project>
