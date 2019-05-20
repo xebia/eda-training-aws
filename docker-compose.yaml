@@ -14,6 +14,17 @@ services:
       retries: 5
     ports:
       - 5432:5432
+  order-system:
+    image: upeter/order-system
+    environment:
+    - INVENTORY_SYSTEM_URI=http://inventory-system:9010
+    - CRM_SYSTEM_URI=http://crm-system:9020
+    - DB_HOST_PORT=order-db:5432
+    depends_on:
+      order-db:
+        condition: service_healthy
+    ports:
+    - 9000:9000
   inventory-db:
     image: postgres:9.6
     environment:
@@ -21,12 +32,22 @@ services:
     - POSTGRES_PASSWORD=supergeheim
     - POSTGRES_DB=inventory
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "orders"]
+      test: ["CMD", "pg_isready", "-U", "inventory"]
       interval: 10s
       timeout: 5s
       retries: 5
     ports:
     - 5431:5432
+  inventory-system:
+    image: upeter/inventory-system
+    environment:
+    - ORDER_SYSTEM_URI=http://order-system:9000
+    - DB_HOST_PORT=order-db:5431
+    depends_on:
+      inventory-db:
+        condition: service_healthy
+    ports:
+    - 9010:9010
   crm-db:
     image: postgres:9.6
     environment:
@@ -34,9 +55,18 @@ services:
     - POSTGRES_PASSWORD=supergeheim
     - POSTGRES_DB=crm
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "orders"]
+      test: ["CMD", "pg_isready", "-U", "crm"]
       interval: 10s
       timeout: 5s
       retries: 5
     ports:
     - 5430:5432
+  crm-system:
+    image: upeter/crm-system
+    environment:
+    - DB_HOST_PORT=order-db:5430
+    depends_on:
+      crm-db:
+        condition: service_healthy
+    ports:
+    - 9020:9020

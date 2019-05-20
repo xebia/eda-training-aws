@@ -20,6 +20,7 @@
     <properties>
         <java.version>1.8</java.version>
         <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
+        <docker.image.prefix>upeter</docker.image.prefix>
     </properties>
 
     <modules>
@@ -80,8 +81,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-
 
 
 </project>
