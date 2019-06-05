@@ -46,7 +46,7 @@ public class SoaOrderController {
     /**
      * Problematic service. Order initiation is dependent on:
      * - CRM system
-     * - Inventory systerm
+     * - Inventory system
      */
     @PostMapping("/orders")
     @ResponseBody

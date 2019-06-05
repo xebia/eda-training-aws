@@ -1,0 +1,100 @@
+package com.xebia.common;
+
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.model.CreateTopicRequest;
+import com.amazonaws.services.sns.model.CreateTopicResult;
+import com.amazonaws.services.sns.model.Subscription;
+import com.amazonaws.services.sqs.AmazonSQSAsync;
+import com.amazonaws.services.sqs.model.CreateQueueResult;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.xebia.LocalstackConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.aws.core.env.ResourceIdResolver;
+import org.springframework.cloud.aws.messaging.core.NotificationMessagingTemplate;
+import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Profile;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.converter.MessageConverter;
+
+import javax.annotation.PostConstruct;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
+
+@Configuration
+@Profile("test")
+@Import(LocalstackConfig.class)
+public class SQSSNSConfig {
+
+    public static final String HELLO_QUEUE = "hello-queue";
+    public static final String HELLO_NOTIFICATION_QUEUE = "hello-notify-queue";
+    public static final String HELLO_TOPIC = "hello-topic";
+
+    @Autowired
+    AmazonSQSAsync amazonSQS;
+    @Autowired
+    AmazonSNS amazonSns;
+
+
+    @Bean
+    ObjectMapper mapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        JavaTimeModule timeModule = new JavaTimeModule();
+        timeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ISO_LOCAL_DATE));
+        timeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        mapper.registerModule(timeModule);
+        return mapper;
+    }
+
+    @Bean
+    public MessageConverter converter(ObjectMapper mapper) {
+        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
+        converter.setSerializedPayloadClass(String.class);
+        converter.setObjectMapper(mapper);
+        return converter;
+    }
+
+
+    @Bean
+    public NotificationMessagingTemplate notificationMessagingTemplate(AmazonSNS amazonSns, MessageConverter converter) {
+        return new NotificationMessagingTemplate(amazonSns, (ResourceIdResolver) null, converter);
+    }
+
+
+    @Bean
+    public QueueMessagingTemplate queueMessagingTemplate(AmazonSQSAsync amazonSQS, MessageConverter converter) {
+        return new QueueMessagingTemplate(amazonSQS, (ResourceIdResolver) null, converter);
+    }
+
+
+    @PostConstruct
+    public void initEnvironment() {
+        //SQS only queue
+        amazonSQS.createQueue(HELLO_QUEUE);
+
+        //SQS queue linked to SNS topic
+        CreateQueueResult helloNotificationQueue = amazonSQS.createQueue(HELLO_NOTIFICATION_QUEUE);
+        String helloQueueArn = amazonSQS.getQueueAttributes(helloNotificationQueue.getQueueUrl(), Arrays.asList("QueueArn")).getAttributes().get("QueueArn");
+
+        CreateTopicResult helloTopic = amazonSns.createTopic(new CreateTopicRequest().withName(HELLO_TOPIC));
+        List<Subscription> existingSubscriptions = amazonSns.listSubscriptions().getSubscriptions();
+
+        // link topic to queue unless subscription is already existing
+        if (existingSubscriptions.stream().noneMatch(s -> s.getEndpoint().equals(helloQueueArn))) {
+            amazonSns.subscribe(helloTopic.getTopicArn(), "sqs", helloQueueArn);
+        }
+
+    }
+
+
+}
+
