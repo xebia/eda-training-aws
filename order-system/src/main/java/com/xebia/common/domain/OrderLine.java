@@ -3,7 +3,8 @@ package com.xebia.common.domain;
 import org.springframework.data.annotation.Immutable;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
@@ -26,19 +27,22 @@ public class OrderLine {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Basic
-    @Column(name = "product_id")
-    private int productId;
-    @Basic
-    @Column(name = "product_name")
-    private String productName;
-    @Basic
-    @Column(name = "item_count")
-    private int itemCount;
 
-    @Basic
+    @Column(name = "product_id")
+    @NotNull
+    private Integer productId;
+
+    @Column(name = "product_name")
+    @NotEmpty
+    private String productName;
+
+    @Column(name = "item_count")
+    @NotNull
+    private Integer itemCount;
+
     @Column(name = "price_cents")
-    private  int priceCents;
+    @NotNull
+    private Integer priceCents;
 
     public Long getId() {
         return id;

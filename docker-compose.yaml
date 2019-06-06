@@ -20,6 +20,8 @@ services:
     - INVENTORY_SYSTEM_URI=http://inventory-system:9010
     - CRM_SYSTEM_URI=http://crm-system:9020
     - SPRING_DATASOURCE_URL=jdbc:postgresql://order-db:5432/orders
+    - AWS_ACCESS_KEY=dummy
+    - AWS_SECRET_KEY=dummy
     depends_on:
       order-db:
         condition: service_healthy
@@ -43,6 +45,8 @@ services:
     environment:
     - ORDER_SYSTEM_URI=http://order-system:9000
     - SPRING_DATASOURCE_URL=jdbc:postgresql://inventory-db:5432/inventory
+    - AWS_ACCESS_KEY=dummy
+    - AWS_SECRET_KEY=dummy
     depends_on:
       inventory-db:
         condition: service_healthy

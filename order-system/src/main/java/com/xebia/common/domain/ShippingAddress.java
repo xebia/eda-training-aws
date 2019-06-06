@@ -1,7 +1,7 @@
 package com.xebia.common.domain;
 
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
@@ -19,23 +19,23 @@ public class ShippingAddress {
         this.zipCode = zipCode;
     }
 
-    @NotNull
+    @NotEmpty
     @Size(max = 100)
     private String street;
 
-    @NotNull
+    @NotEmpty
     @Size(max = 100)
     private String number;
 
-    @NotNull
+    @NotEmpty
     @Size(max = 6)
     private String zipCode;
 
-    @NotNull
+    @NotEmpty
     @Size(max = 100)
     private String city;
 
-    @NotNull
+    @NotEmpty
     @Size(max = 100)
     private String country;
 

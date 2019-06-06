@@ -1,6 +1,5 @@
 package com.xebia.common;
 
-import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.model.CreateTopicRequest;
 import com.amazonaws.services.sns.model.CreateTopicResult;
@@ -11,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.xebia.LocalstackConfig;
+import com.xebia.eda.messaging.LocalStackConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.aws.core.env.ResourceIdResolver;
 import org.springframework.cloud.aws.messaging.core.NotificationMessagingTemplate;
@@ -32,7 +31,7 @@ import java.util.List;
 
 @Configuration
 @Profile("test")
-@Import(LocalstackConfig.class)
+@Import(LocalStackConfig.class)
 public class SQSSNSConfig {
 
     public static final String HELLO_QUEUE = "hello-queue";

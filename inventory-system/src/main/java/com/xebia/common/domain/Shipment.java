@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Immutable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,7 +22,7 @@ public class Shipment {
     private Long orderId;
 
     @Column(name = "shipment_date")
-    private LocalDateTime shipmentDate;
+    private Instant shipmentDate;
 
     @Embedded
     private ShipmentAddress shipmentAddress;
@@ -52,6 +52,10 @@ public class Shipment {
         return orderId;
     }
 
+    public Instant getShipmentDate() {
+        return shipmentDate;
+    }
+
     public ShipmentAddress getShipmentAddress() {
         return shipmentAddress;
     }
@@ -61,7 +65,7 @@ public class Shipment {
         return this;
     }
 
-    public Shipment withShipmentDate(LocalDateTime shipmentDate) {
+    public Shipment withShipmentDate(Instant shipmentDate) {
         this.shipmentDate = shipmentDate;
         return this;
     }

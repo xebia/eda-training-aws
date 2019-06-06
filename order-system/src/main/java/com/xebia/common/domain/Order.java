@@ -3,16 +3,22 @@ package com.xebia.common.domain;
 import org.springframework.data.annotation.Immutable;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static com.xebia.common.domain.OrderState.INITIATED;
+import static java.time.Instant.now;
 
 @Entity
 @Table(name = "orders")
 @Immutable
 public class Order {
-    public Order(Long customerId, OrderState status, ShippingAddress shippingAddress, LocalDateTime created) {
+    public Order(Long customerId, OrderState status, ShippingAddress shippingAddress, Instant created) {
         this.customerId = customerId;
         this.status = status;
         this.created = created;
@@ -22,7 +28,7 @@ public class Order {
     public Order(Long customerId, OrderState status, ShippingAddress shippingAddress) {
         this.customerId = customerId;
         this.status = status;
-        this.created = LocalDateTime.now();
+        this.created = now();
         this.shippingAddress = shippingAddress;
     }
 
@@ -35,20 +41,27 @@ public class Order {
     private Long id;
 
     @Column(name = "customer_id")
+    @NotNull
     private Long customerId;
 
     @Embedded
+    @NotNull
+    @Valid
     private ShippingAddress shippingAddress;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private OrderState status;
+    @NotNull
+    private OrderState status = INITIATED;
 
     @Column(name = "created")
-    private LocalDateTime created;
+    @NotNull
+    private Instant created;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
+    @Valid
+    @NotEmpty
     private final List<OrderLine> lines = new ArrayList<OrderLine>();
 
     public Long getId() { return id; }
@@ -57,7 +70,7 @@ public class Order {
         return status;
     }
 
-    public LocalDateTime getCreated() {
+    public Instant getCreated() {
         return created;
     }
 
@@ -85,7 +98,7 @@ public class Order {
     }
 
     public Order withCreatedNow() {
-        this.created = LocalDateTime.now();
+        this.created = now();
         return this;
     }
 

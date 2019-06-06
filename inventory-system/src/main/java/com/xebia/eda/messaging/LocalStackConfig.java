@@ -1,4 +1,4 @@
-package com.xebia;
+package com.xebia.eda.messaging;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Profile("!prod")
-public class LocalstackConfig {
+public class LocalStackConfig {
     @Bean
     @Primary
     public AWSCredentialsProvider credentialsProvider() {
@@ -23,19 +23,17 @@ public class LocalstackConfig {
     }
 
     @Bean
-    public AmazonSNS amazonSNS(AWSCredentialsProvider credentialsProvider) {
+    public AmazonSNS amazonSNS() {
         return AmazonSNSClientBuilder.standard()
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:4575", "us-east-1"))
-                //.withCredentials(credentialsProvider)
                 .build();
     }
 
     @Bean
     @Primary
-    public AmazonSQSAsync amazonSQSAsync(AWSCredentialsProvider credentialsProvider) {
+    public AmazonSQSAsync amazonSQSAsync() {
         return AmazonSQSAsyncClientBuilder.standard()
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:4576", "us-east-1"))
-                //.withCredentials(credentialsProvider)
                 .build();
     }
 }

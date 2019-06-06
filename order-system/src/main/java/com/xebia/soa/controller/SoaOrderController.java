@@ -2,17 +2,18 @@ package com.xebia.soa.controller;
 
 import com.xebia.common.domain.Customer;
 import com.xebia.common.domain.Order;
-import com.xebia.common.domain.OrderState;
-import com.xebia.soa.service.ExternalCustomerService;
-import com.xebia.soa.service.ExternalInventoryService;
 import com.xebia.common.service.NotificationService;
 import com.xebia.common.service.OrderService;
+import com.xebia.soa.service.ExternalCustomerService;
+import com.xebia.soa.service.ExternalInventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+
+import static com.xebia.common.domain.OrderState.INITIATED;
 
 @RestController
 @RequestMapping(value = "/order-api/v1")
@@ -51,7 +52,7 @@ public class SoaOrderController {
     @PostMapping("/orders")
     @ResponseBody
     public Order saveOrder(@Valid @RequestBody Order order) {
-        Order saved = orderService.saveOrder(order.withStatus(OrderState.INITIATED).withCreatedNow());
+        Order saved = orderService.saveOrder(order.withStatus(INITIATED).withCreatedNow());
         Customer customer = externalCustomerService.getCustomer(order.getCustomerId());
         externalInventoryService.initiateShipment(customer, saved);
         notificationService.notifyCustomer(customer, saved);
