@@ -6,13 +6,12 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsyncClient;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBAsync;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBAsyncClient;
 import com.amazonaws.services.kinesis.AmazonKinesis;
 import com.amazonaws.services.kinesis.AmazonKinesisAsyncClient;
-import com.amazonaws.services.sns.AmazonSNS;
-import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+import com.amazonaws.services.sns.AmazonSNSAsync;
+import com.amazonaws.services.sns.AmazonSNSAsyncClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,8 +48,8 @@ public class LocalStackConfig {
 
     @Bean
     @Primary
-    public AmazonSNS amazonSNS(AWSCredentialsProvider awsCredentialsProvider) {
-        return AmazonSNSClientBuilder.standard()
+    public AmazonSNSAsync amazonSNS(AWSCredentialsProvider awsCredentialsProvider) {
+        return AmazonSNSAsyncClientBuilder.standard()
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:4575", "eu-west-1"))
                 .withCredentials(awsCredentialsProvider)
                 .build();

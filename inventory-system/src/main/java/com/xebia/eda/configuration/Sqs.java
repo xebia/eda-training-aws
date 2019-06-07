@@ -2,7 +2,6 @@ package com.xebia.eda.configuration;
 
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.core.env.ResourceIdResolver;
 import org.springframework.cloud.aws.messaging.config.QueueMessageHandlerFactory;
@@ -16,29 +15,13 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
-
 import static java.util.Collections.singletonList;
 
 @Configuration
 public class Sqs {
 
-    public static final String ORDER_CREATED_QUEUE = "order-created";
-    public static final String ORDER_SHIPPED_QUEUE = "order-shipped";
-
-    @Autowired
-    AmazonSQSAsync amazonSQS;
-
-    @PostConstruct
-    public void createQueues() {
-        List<String> queues = new ArrayList<>();
-        queues.add(ORDER_CREATED_QUEUE);
-        queues.add(ORDER_SHIPPED_QUEUE);
-
-        queues.forEach(amazonSQS::createQueue);
-    }
+    public static final String ORDER_CREATED_QUEUE = "orderCreated";
+    public static final String ORDER_SHIPPED_QUEUE = "orderShipped";
 
     @Bean(destroyMethod = "doStop")
     public SimpleMessageListenerContainer simpleMessageListenerContainer(SimpleMessageListenerContainerFactory factory,
@@ -50,7 +33,8 @@ public class Sqs {
 
     @Bean
     @Primary
-    public SimpleMessageListenerContainerFactory simpleMessageListenerContainerFactory(@Value("${sqs.wait.timeout.seconds:5}") Integer waitTimeoutSeconds) {
+    public SimpleMessageListenerContainerFactory simpleMessageListenerContainerFactory(AmazonSQSAsync amazonSQS,
+                                                                                       @Value("${sqs.wait.timeout.seconds:5}") Integer waitTimeoutSeconds) {
         SimpleMessageListenerContainerFactory factory = new SimpleMessageListenerContainerFactory();
         factory.setAmazonSqs(amazonSQS);
         factory.setWaitTimeOut(waitTimeoutSeconds);

@@ -36,11 +36,6 @@ public class SQSSNSConfig {
     @Autowired
     AmazonSNS amazonSns;
 
-    @Bean
-    public NotificationMessagingTemplate notificationMessagingTemplate(AmazonSNS amazonSns, MessageConverter converter) {
-        return new NotificationMessagingTemplate(amazonSns, (ResourceIdResolver) null, converter);
-    }
-
     @PostConstruct
     public void initEnvironment() {
 
