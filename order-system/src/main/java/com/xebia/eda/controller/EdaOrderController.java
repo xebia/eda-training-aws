@@ -1,15 +1,13 @@
 package com.xebia.eda.controller;
 
-import com.xebia.common.domain.Customer;
 import com.xebia.common.domain.Order;
 import com.xebia.common.service.OrderService;
-import com.xebia.eda.messaging.Sqs;
-import com.xebia.eda.messaging.messages.ShipmentConfirmation;
-import com.xebia.eda.messaging.messages.Shipment;
+import com.xebia.eda.domain.OrderShipped;
 import com.xebia.eda.service.CustomerViewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +18,10 @@ import java.util.Optional;
 
 import static com.xebia.common.domain.OrderState.INITIATED;
 import static com.xebia.common.domain.OrderState.SHIPPED;
-import static com.xebia.eda.messaging.Sqs.ORDER_SHIPPED_QUEUE;
-import static com.xebia.eda.messaging.Sqs.SHIP_ORDER_QUEUE;
-import static com.xebia.eda.messaging.messages.Shipment.shipmentFor;
+import static com.xebia.eda.configuration.Sqs.ORDER_CREATED_QUEUE;
+import static com.xebia.eda.configuration.Sqs.ORDER_SHIPPED_QUEUE;
+import static com.xebia.eda.domain.OrderCreated.asOrderCreatedEvent;
+import static java.lang.String.format;
 import static org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy.ON_SUCCESS;
 import static org.springframework.http.ResponseEntity.accepted;
 
@@ -34,15 +33,15 @@ public class EdaOrderController {
 
     private final OrderService orderService;
     private final CustomerViewService customerViewService;
-    private final Sqs sqs;
+    private final QueueMessagingTemplate queue;
 
     @Autowired
     public EdaOrderController(OrderService orderService,
                               CustomerViewService customerViewService,
-                              Sqs sqs) {
+                              QueueMessagingTemplate queue) {
         this.orderService = orderService;
         this.customerViewService = customerViewService;
-        this.sqs = sqs;
+        this.queue = queue;
     }
 
     @GetMapping("/orders/{id}")
@@ -62,23 +61,23 @@ public class EdaOrderController {
     public ResponseEntity<Order> saveOrder(@Valid @RequestBody Order order) {
         Order saved = orderService.saveOrder(order.withStatus(INITIATED).withCreatedNow());
 
-        // Send shipment request
-        Customer customer = new Customer("TODO", null, null, false, false, null);
-        Shipment shipment = shipmentFor(customer, saved);
-        LOGGER.info("Putting shipment on queue: {}", shipment);
-        sqs.sendMessage(SHIP_ORDER_QUEUE, shipment);
-
-        // TODO: use SNS to notify customer that order was placed
-
-        return accepted().body(saved);
+        return customerViewService.getCustomer(order.getCustomerId())
+                .map(customer -> asOrderCreatedEvent(customer, saved))
+                .flatMap(event -> {
+                    LOGGER.info("Placing OrderCreated event on queue: {}", event);
+                    queue.convertAndSend(ORDER_CREATED_QUEUE, event);
+                    return Optional.of(saved);
+                })
+                .map(result -> accepted().body(result))
+                .orElseThrow(() -> new IllegalArgumentException(format("Cannot find customer with ID [%s]", order.getCustomerId())));
     }
 
     @SqsListener(value = ORDER_SHIPPED_QUEUE, deletionPolicy = ON_SUCCESS)
-    public void handle(ShipmentConfirmation message) {
-        LOGGER.info("Received shipment confirmation: {}", message);
+    public void handle(OrderShipped message) {
+        LOGGER.info("Received order shipped event: {}", message);
         orderService.getOrder(message.getOrderId())
                 .map(o -> orderService.updateOrder(o.withStatus(SHIPPED), message.getOrderId()))
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Order with id %s not found", message.getOrderId())));
+                .orElseThrow(() -> new IllegalArgumentException(format("Order with id [%s] not found", message.getOrderId())));
     }
 
 }

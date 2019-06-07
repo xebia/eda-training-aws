@@ -3,6 +3,9 @@ package com.xebia.common.domain;
 import org.springframework.data.annotation.Immutable;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
@@ -27,22 +30,27 @@ public class Customer {
     private Long id;
 
     @Embedded
+    @Valid
     private Address address;
 
-
     @Column(name = "name")
+    @NotEmpty
     private String name;
 
     @Column(name = "email")
+    @NotEmpty
     private String email;
 
     @Column(name = "mobile")
+    @NotEmpty
     private String mobile;
 
     @Column(name = "notification_email")
+    @NotNull
     private boolean notificationEmail;
 
     @Column(name = "notification_text")
+    @NotNull
     private boolean notificationText;
 
     public Long getId() {

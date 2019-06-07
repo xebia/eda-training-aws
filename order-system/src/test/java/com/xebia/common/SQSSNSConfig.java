@@ -6,7 +6,7 @@ import com.amazonaws.services.sns.model.CreateTopicResult;
 import com.amazonaws.services.sns.model.Subscription;
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.model.CreateQueueResult;
-import com.xebia.eda.messaging.LocalStackConfig;
+import com.xebia.eda.configuration.LocalStackConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.aws.core.env.ResourceIdResolver;
 import org.springframework.cloud.aws.messaging.config.SimpleMessageListenerContainerFactory;
@@ -39,16 +39,6 @@ public class SQSSNSConfig {
     @Bean
     public NotificationMessagingTemplate notificationMessagingTemplate(AmazonSNS amazonSns, MessageConverter converter) {
         return new NotificationMessagingTemplate(amazonSns, (ResourceIdResolver) null, converter);
-    }
-
-
-    @Bean
-    public SimpleMessageListenerContainerFactory simpleMessageListenerContainerFactory(AmazonSQSAsync amazonSQS) {
-        SimpleMessageListenerContainerFactory factory = new SimpleMessageListenerContainerFactory();
-        factory.setAmazonSqs(amazonSQS);
-        factory.setMaxNumberOfMessages(5);
-        factory.setWaitTimeOut(2);
-        return factory;
     }
 
     @PostConstruct

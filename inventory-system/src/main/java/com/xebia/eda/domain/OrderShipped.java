@@ -1,13 +1,12 @@
-package com.xebia.eda.messaging.messages;
+package com.xebia.eda.domain;
 
-public class ShipmentConfirmation {
-
+public class OrderShipped {
     private Long orderId;
 
-    public ShipmentConfirmation() {
+    public OrderShipped() {
     }
 
-    public ShipmentConfirmation(Long orderId) {
+    public OrderShipped(Long orderId) {
         this.orderId = orderId;
     }
 
@@ -15,9 +14,13 @@ public class ShipmentConfirmation {
         return orderId;
     }
 
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
     @Override
     public String toString() {
-        return "ShipmentConfirmation{" +
+        return "OrderShipped{" +
                 "orderId=" + orderId +
                 '}';
     }

@@ -13,7 +13,8 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(String name, String email, String mobile, boolean notificationEmail, boolean notificationText, Address address) {
+    public Customer(Long id, String name, String email, String mobile, boolean notificationEmail, boolean notificationText, Address address) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.mobile = mobile;
@@ -23,7 +24,6 @@ public class Customer {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String name;

@@ -1,32 +1,40 @@
-package com.xebia.eda.messaging.messages;
+package com.xebia.eda.domain;
 
 import com.xebia.common.domain.Customer;
 import com.xebia.common.domain.Order;
 import com.xebia.common.domain.ShippingAddress;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 
-public class Shipment {
+public class OrderCreated {
 
     private Long orderId;
+    private Long customerId;
+    private Instant created;
     private ShipmentAddress shipmentAddress;
     private List<InventoryItem> items;
 
-    public Shipment() {
+    public OrderCreated() {
     }
 
-    public Shipment(Long orderId, ShipmentAddress shipmentAddress, List<InventoryItem> items) {
+    public OrderCreated(Long orderId, Long customerId, Instant created, ShipmentAddress shipmentAddress, List<InventoryItem> items) {
         this.orderId = orderId;
+        this.customerId = customerId;
+        this.created = created;
         this.shipmentAddress = shipmentAddress;
         this.items = items;
     }
 
-    public static Shipment shipmentFor(Customer customer, Order order) {
+    public static OrderCreated asOrderCreatedEvent(Customer customer, Order order) {
         ShippingAddress shippingAddress = order.getShippingAddress();
-        return new Shipment(
+        return new OrderCreated(
                 order.getId(),
+                order.getCustomerId(),
+                order.getCreated(),
                 new ShipmentAddress(
                         customer.getName(),
                         shippingAddress.getStreet(),
@@ -49,6 +57,22 @@ public class Shipment {
         this.orderId = orderId;
     }
 
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public Instant getCreated() {
+        return created;
+    }
+
+    public void setCreated(Instant created) {
+        this.created = created;
+    }
+
     public ShipmentAddress getShipmentAddress() {
         return shipmentAddress;
     }
@@ -66,9 +90,28 @@ public class Shipment {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderCreated that = (OrderCreated) o;
+        return orderId.equals(that.orderId) &&
+                customerId.equals(that.customerId) &&
+                created.equals(that.created) &&
+                shipmentAddress.equals(that.shipmentAddress) &&
+                items.equals(that.items);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderId, customerId, created, shipmentAddress, items);
+    }
+
+    @Override
     public String toString() {
-        return "Shipment{" +
+        return "OrderCreated{" +
                 "orderId=" + orderId +
+                ", customerId=" + customerId +
+                ", created=" + created +
                 ", shipmentAddress=" + shipmentAddress +
                 ", items=" + items +
                 '}';

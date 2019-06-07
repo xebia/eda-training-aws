@@ -17,6 +17,10 @@ public class CustomerViewService {
         this.customerViewRepository = customerViewRepository;
     }
 
+    public Customer saveCustomer(Customer customer) {
+        return customerViewRepository.save(customer);
+    }
+
     public Optional<Customer> getCustomer(Long id) {
         return customerViewRepository.findById(id);
     }

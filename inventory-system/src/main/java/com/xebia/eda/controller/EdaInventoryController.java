@@ -2,11 +2,12 @@ package com.xebia.eda.controller;
 
 import com.xebia.common.domain.Shipment;
 import com.xebia.common.service.InventoryService;
-import com.xebia.eda.messaging.Sqs;
-import com.xebia.eda.messaging.messages.ShipmentConfirmation;
+import com.xebia.eda.domain.OrderCreated;
+import com.xebia.eda.domain.OrderShipped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Controller;
@@ -18,8 +19,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-import static com.xebia.eda.messaging.Sqs.ORDER_SHIPPED_QUEUE;
-import static com.xebia.eda.messaging.Sqs.SHIP_ORDER_QUEUE;
+import static com.xebia.eda.configuration.Sqs.ORDER_CREATED_QUEUE;
+import static com.xebia.eda.configuration.Sqs.ORDER_SHIPPED_QUEUE;
 import static org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy.ON_SUCCESS;
 
 @Controller
@@ -28,24 +29,31 @@ public class EdaInventoryController {
     private static final Logger LOGGER = LoggerFactory.getLogger(EdaInventoryController.class);
 
     private InventoryService inventoryService;
-    private Sqs sqs;
+    private QueueMessagingTemplate queue;
     private TaskScheduler scheduler;
 
     @Autowired
-    public EdaInventoryController(InventoryService inventoryService, Sqs sqs, TaskScheduler scheduler) {
+    public EdaInventoryController(InventoryService inventoryService, QueueMessagingTemplate queue, TaskScheduler scheduler) {
         this.inventoryService = inventoryService;
-        this.sqs = sqs;
+        this.queue = queue;
         this.scheduler = scheduler;
     }
 
-    @SqsListener(value = SHIP_ORDER_QUEUE, deletionPolicy = ON_SUCCESS)
-    public void handle(Shipment shipment) {
+    @SqsListener(value = ORDER_CREATED_QUEUE, deletionPolicy = ON_SUCCESS)
+    public void handle(OrderCreated event) {
         Instant shipmentDate = Instant.now().plusSeconds(15);
-        scheduler.schedule(() -> sqs.sendMessage(ORDER_SHIPPED_QUEUE, new ShipmentConfirmation(shipment.getOrderId())), shipmentDate);
+        scheduler.schedule(() -> queue.convertAndSend(ORDER_SHIPPED_QUEUE, new OrderShipped(event.getOrderId())), shipmentDate);
+        LOGGER.info("Scheduled order with id=[{}] to be shipped at {}", event.getOrderId(), shipmentDate);
 
-        LOGGER.info("Scheduled order with id=[{}] to be shipped at {}", shipment.getOrderId(), shipmentDate);
+        inventoryService.saveShipment(asShipment(event).withShipmentDate(shipmentDate));
+    }
 
-        inventoryService.saveShipment(shipment.withShipmentDate(shipmentDate));
+    private Shipment asShipment(OrderCreated event) {
+        return new Shipment(
+                event.getOrderId(),
+                event.getShipmentAddress(),
+                event.getItems()
+        );
     }
 
     @GetMapping("/shipments/{id}")

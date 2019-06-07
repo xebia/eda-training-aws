@@ -20,7 +20,6 @@ public class OrderLine {
     }
 
     private OrderLine() {
-
     }
 
     @Id

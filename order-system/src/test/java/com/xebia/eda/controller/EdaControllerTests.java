@@ -2,20 +2,26 @@ package com.xebia.eda.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xebia.common.DomainSamples;
+import com.xebia.common.domain.Customer;
 import com.xebia.common.domain.Order;
+import com.xebia.eda.service.CustomerViewService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,8 +38,14 @@ public class EdaControllerTests {
     @Autowired
     ObjectMapper mapper;
 
+    @MockBean
+    CustomerViewService customerViewService;
+
     @Test
     public void shouldInsertOrder() throws Exception {
+        Customer customer = DomainSamples.CUSTOMER_1;
+        when(customerViewService.getCustomer(customer.getId())).thenReturn(Optional.of(customer));
+
         Order order = DomainSamples.createInitialOrder(5);
         MvcResult response = mockMvc.perform(post("/order-api/v2/orders")
                 .contentType(MediaType.APPLICATION_JSON)

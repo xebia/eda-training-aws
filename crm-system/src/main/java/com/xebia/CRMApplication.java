@@ -42,28 +42,6 @@ public class CRMApplication {
 
 }
 
-@Configuration
-@Profile("!prod")
-class LocalstackConfig {
-    public AWSCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(new AnonymousAWSCredentials());
-
-    @Bean
-    public AmazonSNS amazonSNS() {
-        return AmazonSNSClientBuilder.standard()
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:4575", "us-east-1"))
-                .withCredentials(credentialsProvider)
-                .build();
-    }
-
-    @Bean
-    public AmazonSQS amazonSQS() {
-        return AmazonSQSAsyncClientBuilder.standard()
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:4576", "us-east-1"))
-                .withCredentials(credentialsProvider)
-                .build();
-    }
-}
-
 @Component
 class DataLoader implements ApplicationRunner {
 

@@ -38,11 +38,9 @@ public class SoaCustomerController {
         return customerService.saveCustomer(customer);
     }
 
-    @PutMapping("/customers/{id")
+    @PutMapping("/customers/{id}")
     @ResponseBody
     public Customer updateCustomer(@Valid @RequestBody Customer customer, @PathVariable("id") Long id) {
         return customerService.updateCustomer(customer, id);
     }
-
-
 }
