@@ -9,7 +9,7 @@
 - `cd localstack`
 - `TMPDIR=/private$TMPDIR docker-compose up -d`
 - For faster startup minimize localstack components via `SERVICES` env variable, only selecting the necessary services:
-    - `TMPDIR=/private$TMPDIR && SERVICES="sns,sqs,kinesis" docker-compose up -d`
+    - `TMPDIR=/private$TMPDIR SERVICES="sns,sqs,kinesis,dynamodb,cloudwatch" docker-compose up -d`
 
 
 
