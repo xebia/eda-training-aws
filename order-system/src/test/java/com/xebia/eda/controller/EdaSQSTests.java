@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.xebia.common.SQSSNSConfig.HELLO_QUEUE;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 
 @RunWith(SpringRunner.class)
@@ -42,9 +41,5 @@ public class EdaSQSTests {
 
         Order receive = queueMessagingTemplate.receiveAndConvert(HELLO_QUEUE, Order.class);
         assertEquals(order, receive);
-
-
     }
-
-
 }

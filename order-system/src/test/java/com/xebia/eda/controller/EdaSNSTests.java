@@ -26,9 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.xebia.common.SQSSNSConfig.HELLO_NOTIFICATION_QUEUE;
 import static com.xebia.common.SQSSNSConfig.HELLO_TOPIC;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 
 @RunWith(SpringRunner.class)
@@ -37,7 +35,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @ActiveProfiles({"default", "test"})
 @Ignore
 public class EdaSNSTests {
-
 
     @Component
     @TestConfiguration
@@ -60,7 +57,6 @@ public class EdaSNSTests {
 
     }
 
-
     @Autowired
     ManualDeletionPolicyTestListener manualDeletionPolicyTestListener;
 
@@ -77,5 +73,4 @@ public class EdaSNSTests {
 
         assertTrue(manualDeletionPolicyTestListener.getCountDownLatch().await(5, TimeUnit.SECONDS));
     }
-
 }
