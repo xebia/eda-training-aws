@@ -10,10 +10,7 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.ZoneId;
-import java.util.Date;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,15 +37,11 @@ public class SoaInventoryController {
     @PostMapping("/shipments")
     @ResponseBody
     public Shipment ship(@Valid @RequestBody Shipment shipment) {
-        LocalDateTime shipmentDate = LocalDateTime.now().plusSeconds(15);
-        Date shipped = Date.from(shipmentDate.atZone(ZoneId.systemDefault()).toInstant());
-        scheduler.schedule(new Runnable() {
-            @Override
-            public void run() {
-                externalOrderService.notifyOrderShipped(shipment.getOrderId());
-            }
-        }, shipped);
-        LOGGER.info("Scheduled order with id=[" + shipment.getOrderId() + "] to be shipped in {}", shipped);
+        Instant shipmentDate = Instant.now().plusSeconds(15);
+        scheduler.schedule(() -> externalOrderService.notifyOrderShipped(shipment.getOrderId()), shipmentDate);
+
+        LOGGER.info("Scheduled order with id=[{}] to be shipped at {}", shipment.getOrderId(), shipmentDate);
+
         return inventoryService.saveShipment(shipment.withShipmentDate(shipmentDate));
     }
 
@@ -63,6 +56,4 @@ public class SoaInventoryController {
     public List<Shipment> getShipments() {
         return inventoryService.getShipments();
     }
-
-
 }

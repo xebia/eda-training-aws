@@ -26,7 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles({"default", "test"})
 public class EdaControllerTests {
 
-
     @Autowired
     MockMvc mockMvc;
 
@@ -40,7 +39,7 @@ public class EdaControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(order))
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
+                .andExpect(status().isAccepted())
                 .andReturn();
 
         Order inserted = mapper.readValue(response.getResponse().getContentAsString(), Order.class);
@@ -48,5 +47,4 @@ public class EdaControllerTests {
         assertEquals(order.getLines().size(), inserted.getLines().size());
 
     }
-
 }
