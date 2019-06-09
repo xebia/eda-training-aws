@@ -3,6 +3,7 @@
 ### Startup environment
 #### Application environment
 - `docker-compose up`
+- Create AWS resources: run `./scripts/create-aws-resources.sh`
 
 #### AWS (localstack)
 - `git clone https://github.com/localstack/localstack.git`

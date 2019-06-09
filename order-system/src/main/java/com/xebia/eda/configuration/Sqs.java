@@ -21,7 +21,7 @@ import static java.util.Collections.singletonList;
 public class Sqs {
 
     public static final String ORDER_CREATED_QUEUE = "orderCreated";
-    public static final String ORDER_SHIPPED_QUEUE = "orderShipped";
+    public static final String ORDER_SHIPPED_EVENT_QUEUE = "orderShippedEvent";
 
     @Bean(destroyMethod = "doStop")
     public SimpleMessageListenerContainer simpleMessageListenerContainer(SimpleMessageListenerContainerFactory factory,

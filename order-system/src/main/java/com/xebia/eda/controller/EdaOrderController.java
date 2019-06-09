@@ -7,6 +7,7 @@ import com.xebia.eda.service.CustomerViewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.aws.messaging.config.annotation.NotificationMessage;
 import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ import java.util.Optional;
 import static com.xebia.common.domain.OrderState.INITIATED;
 import static com.xebia.common.domain.OrderState.SHIPPED;
 import static com.xebia.eda.configuration.Sqs.ORDER_CREATED_QUEUE;
-import static com.xebia.eda.configuration.Sqs.ORDER_SHIPPED_QUEUE;
+import static com.xebia.eda.configuration.Sqs.ORDER_SHIPPED_EVENT_QUEUE;
 import static com.xebia.eda.domain.OrderCreated.asOrderCreatedEvent;
 import static java.lang.String.format;
 import static org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy.ON_SUCCESS;
@@ -72,12 +73,11 @@ public class EdaOrderController {
                 .orElseThrow(() -> new IllegalArgumentException(format("Cannot find customer with ID [%s]", order.getCustomerId())));
     }
 
-    @SqsListener(value = ORDER_SHIPPED_QUEUE, deletionPolicy = ON_SUCCESS)
-    public void handle(OrderShipped message) {
-        LOGGER.info("Received order shipped event: {}", message);
-        orderService.getOrder(message.getOrderId())
-                .map(o -> orderService.updateOrder(o.withStatus(SHIPPED), message.getOrderId()))
-                .orElseThrow(() -> new IllegalArgumentException(format("Order with id [%s] not found", message.getOrderId())));
+    @SqsListener(value = ORDER_SHIPPED_EVENT_QUEUE, deletionPolicy = ON_SUCCESS)
+    public void handle(@NotificationMessage OrderShipped event) {
+        LOGGER.info("Received order shipped event: {}", event);
+        orderService.getOrder(event.getOrderId())
+                .map(o -> orderService.updateOrder(o.withStatus(SHIPPED), event.getOrderId()))
+                .orElseThrow(() -> new IllegalArgumentException(format("Order with id [%s] not found", event.getOrderId())));
     }
-
 }

@@ -31,8 +31,7 @@ public class CustomerService {
     }
 
     public Customer updateCustomer(Customer customer, Long id) {
-        Assert.isTrue(customer.getId() == null || customer.getId() == id, "Conflicting customer id");
-        return customerRepository.save(customer);
-
+        Assert.isTrue(customer.getId() == null || customer.getId().equals(id), "Conflicting customer id");
+        return customerRepository.save(customer.withId(id));
     }
 }

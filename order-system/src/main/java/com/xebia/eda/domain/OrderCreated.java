@@ -94,7 +94,7 @@ public class OrderCreated {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderCreated that = (OrderCreated) o;
-        return orderId.equals(that.orderId) &&
+        return Objects.equals(orderId, that.orderId) &&
                 customerId.equals(that.customerId) &&
                 created.equals(that.created) &&
                 shipmentAddress.equals(that.shipmentAddress) &&
@@ -144,6 +144,20 @@ public class OrderCreated {
 
         public void setItemCount(Integer itemCount) {
             this.itemCount = itemCount;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            InventoryItem that = (InventoryItem) o;
+            return productId.equals(that.productId) &&
+                    itemCount.equals(that.itemCount);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(productId, itemCount);
         }
 
         @Override
@@ -221,6 +235,24 @@ public class OrderCreated {
 
         public void setCountry(String country) {
             this.country = country;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ShipmentAddress that = (ShipmentAddress) o;
+            return name.equals(that.name) &&
+                    street.equals(that.street) &&
+                    number.equals(that.number) &&
+                    zipCode.equals(that.zipCode) &&
+                    city.equals(that.city) &&
+                    country.equals(that.country);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name, street, number, zipCode, city, country);
         }
 
         @Override

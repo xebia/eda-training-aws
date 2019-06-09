@@ -7,7 +7,7 @@ import com.xebia.eda.domain.OrderShipped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
+import org.springframework.cloud.aws.messaging.core.NotificationMessagingTemplate;
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Controller;
@@ -19,8 +19,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+import static com.xebia.eda.configuration.Sns.ORDER_SHIPPED_TOPIC;
 import static com.xebia.eda.configuration.Sqs.ORDER_CREATED_QUEUE;
-import static com.xebia.eda.configuration.Sqs.ORDER_SHIPPED_QUEUE;
 import static org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy.ON_SUCCESS;
 
 @Controller
@@ -29,20 +29,22 @@ public class EdaInventoryController {
     private static final Logger LOGGER = LoggerFactory.getLogger(EdaInventoryController.class);
 
     private InventoryService inventoryService;
-    private QueueMessagingTemplate queue;
+    private NotificationMessagingTemplate topic;
     private TaskScheduler scheduler;
 
     @Autowired
-    public EdaInventoryController(InventoryService inventoryService, QueueMessagingTemplate queue, TaskScheduler scheduler) {
+    public EdaInventoryController(InventoryService inventoryService, NotificationMessagingTemplate topic, TaskScheduler scheduler) {
         this.inventoryService = inventoryService;
-        this.queue = queue;
+        this.topic = topic;
         this.scheduler = scheduler;
     }
 
     @SqsListener(value = ORDER_CREATED_QUEUE, deletionPolicy = ON_SUCCESS)
     public void handle(OrderCreated event) {
         Instant shipmentDate = Instant.now().plusSeconds(15);
-        scheduler.schedule(() -> queue.convertAndSend(ORDER_SHIPPED_QUEUE, new OrderShipped(event.getOrderId())), shipmentDate);
+
+        Runnable publisher = () -> topic.sendNotification(ORDER_SHIPPED_TOPIC, new OrderShipped(event.getOrderId(), event.getCustomerId()), "Order shipped!");
+        scheduler.schedule(publisher, shipmentDate);
         LOGGER.info("Scheduled order with id=[{}] to be shipped at {}", event.getOrderId(), shipmentDate);
 
         inventoryService.saveShipment(asShipment(event).withShipmentDate(shipmentDate));
