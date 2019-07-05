@@ -30,8 +30,9 @@ public class ExternalInventoryService {
         ShipmentDto body = convertToShipment(customer, order);
         try {
             restTemplate.postForEntity(inventorySystemUri + "/inventory-api/v1/shipments", body, ShipmentDto.class);
+            LOGGER.info("SOA: Call inventory system to ship order: {}", order.getId());
         } catch (Exception ex) {
-            LOGGER.error("Could not ship Order due to=[{}]", ex.getMessage(), ex);
+            LOGGER.error("SOA: Could not ship Order due to=[{}]", ex.getMessage(), ex);
         }
 
     }

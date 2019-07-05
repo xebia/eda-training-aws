@@ -50,13 +50,13 @@ public class EdaInventoryController {
             try {
                 OrderShipped orderShippedEvent = new OrderShipped(event.getOrderId(), event.getCustomerId(), LocalDateTime.ofInstant(shipmentDate, OffsetDateTime.now().getOffset()));
                 topic.sendNotification(ORDER_SHIPPED_TOPIC, orderShippedEvent, "Order shipped!");
-                LOGGER.info("Sent OrderShipped event {}",orderShippedEvent);
+                LOGGER.info("EDA: Sent OrderShipped event {}",orderShippedEvent);
             } catch(Exception ex) {
-                LOGGER.error("Failed to send OrderShipped Event due to {}", ex.getMessage(), ex);
+                LOGGER.error("EDA: Failed to send OrderShipped Event due to {}", ex.getMessage(), ex);
             }
         };
         scheduler.schedule(publisher, shipmentDate);
-        LOGGER.info("Scheduled order with id=[{}] to be shipped at {}", event.getOrderId(), shipmentDate);
+        LOGGER.info("EDA: Scheduled order with id=[{}] to be shipped at {}", event.getOrderId(), shipmentDate);
 
         inventoryService.saveShipment(asShipment(event).withShipmentDate(shipmentDate));
     }

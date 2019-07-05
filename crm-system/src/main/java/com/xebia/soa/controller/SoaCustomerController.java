@@ -3,6 +3,8 @@ package com.xebia.soa.controller;
 import com.xebia.common.domain.Customer;
 import com.xebia.common.service.CustomerService;
 import com.xebia.common.service.NotificationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +15,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping(value = "/customer-api/v1")
 public class SoaCustomerController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SoaCustomerController.class);
 
     private final CustomerService customerService;
     private final NotificationService notificationService;
@@ -49,6 +53,7 @@ public class SoaCustomerController {
 
     @PutMapping("/customers/{id}/notifications")
     public void notifyCustomer(@PathVariable("id") Long id, @RequestParam("orderId") Long orderId) {
+        LOGGER.info("SOA: Notify customer that order is shipped");
         customerService.getCustomer(id)
                 .ifPresent(customer -> notificationService.notifyCustomer(customer, orderId));
     }

@@ -29,9 +29,9 @@ public class ExternalOrderService {
         body.put("status", "SHIPPED");
         try {
             restTemplate.patchForObject(orderSystemUri + "/order-api/v1/orders/" + orderId, body, Map.class, new HashMap());
-            LOGGER.info("Notify Order service that order with id=[{}] is shipped", orderId);
+            LOGGER.info("SOA: Notify Order service that order with id=[{}] is shipped", orderId);
         } catch (Exception ex) {
-            LOGGER.error("Could not notify Order service of shipment due to=[{}]", ex.getMessage(), ex);
+            LOGGER.error("SOA: Could not notify Order service of shipment due to=[{}]", ex.getMessage(), ex);
         }
 
     }

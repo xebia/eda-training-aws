@@ -38,16 +38,19 @@ public class SoaInventoryController {
     @ResponseBody
     public Shipment ship(@Valid @RequestBody Shipment shipment) {
         Instant shipmentDate = Instant.now().plusSeconds(15);
-        scheduler.schedule(() -> externalOrderService.notifyOrderShipped(shipment.getOrderId()), shipmentDate);
+        scheduler.schedule(() -> {
+            LOGGER.info("SOA: call order system to notify that order with id=[{}] is shipped at [{}]", shipment.getOrderId(), shipmentDate);
+            externalOrderService.notifyOrderShipped(shipment.getOrderId());
+        }, shipmentDate);
 
-        LOGGER.info("Scheduled order with id=[{}] to be shipped at {}", shipment.getOrderId(), shipmentDate);
+        LOGGER.info("SOA: Scheduled order with id=[{}] to be shipped at {}", shipment.getOrderId(), shipmentDate);
 
         return inventoryService.saveShipment(shipment.withShipmentDate(shipmentDate));
     }
 
     @GetMapping("/shipments/{id}")
     @ResponseBody
-    public Optional<Shipment> getShipment(@PathVariable("id")Long id) {
+    public Optional<Shipment> getShipment(@PathVariable("id") Long id) {
         return inventoryService.getShipment(id);
     }
 

@@ -5,6 +5,8 @@ import com.xebia.common.domain.Order;
 import com.xebia.common.service.OrderService;
 import com.xebia.soa.service.ExternalCustomerService;
 import com.xebia.soa.service.ExternalInventoryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,8 @@ import static com.xebia.common.domain.OrderState.INITIATED;
 @RestController
 @RequestMapping(value = "/order-api/v1")
 public class SoaOrderController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SoaOrderController.class);
 
     private final OrderService orderService;
     private final ExternalInventoryService externalInventoryService;
@@ -64,6 +68,7 @@ public class SoaOrderController {
     public Order patchOrder(@Valid @RequestBody Order order, @PathVariable("id") Long id) {
         Optional<Order> saved = orderService.getOrder(id);
         return saved.map(o -> {
+            LOGGER.info("SOA: Order is shipped: {}", id);
             Order patched = orderService.updateOrder(o.withStatus(order.getStatus()), id);
             externalCustomerService.notifyCustomer(o.getCustomerId(), patched.getId());
             return patched;

@@ -30,18 +30,19 @@ public class ExternalCustomerService {
 
     public Customer getCustomer(Long id) {
         try {
+            LOGGER.info("SOA: Call customer service to get customer with id=[{}]", id);
             ResponseEntity<Customer> responseEntity = restTemplate.getForEntity(crmSystemUri + "/customer-api/v1/customers/" + id, Customer.class);
             return responseEntity.getBody();
         } catch (Exception ex) {
-            LOGGER.error("Could not ship Order due to=[{}]", ex.getMessage(), ex);
+            LOGGER.error("SOA: Calling customer service failed due to=[{}]", ex.getMessage(), ex);
             throw new IllegalArgumentException(ex);
         }
     }
 
     public void notifyCustomer(Long customerId, Long orderId) {
         try {
+            LOGGER.info("SOA: Call customer service that order with id=[{}] is shipped", orderId);
             restTemplate.execute(crmSystemUri + "/customer-api/v1/customers/" + customerId + "/notifications?orderId=" + orderId, HttpMethod.PUT, request -> { }, b -> b);
-            LOGGER.info("Notify customer service that order with id=[{}] is shipped", orderId);
         } catch (Exception ex) {
             LOGGER.error("Could not notify customer service of shipment due to=[{}]", ex.getMessage(), ex);
         }

@@ -61,7 +61,7 @@ public class EdaCustomerController {
 
     @SqsListener(value = ORDER_SHIPPED_NOTIFICATION_QUEUE, deletionPolicy = ON_SUCCESS)
     public void handle(@NotificationMessage OrderShipped event) {
-        LOGGER.info("Received order shipped event: {}", event);
+        LOGGER.info("EDA: Received order shipped event: {}", event);
         customerService.getCustomer(event.getCustomerId())
                 .ifPresent(customer -> notificationService.notifyCustomer(customer, event.getOrderId()));
     }

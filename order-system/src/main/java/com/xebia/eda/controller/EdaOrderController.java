@@ -65,20 +65,20 @@ public class EdaOrderController {
         return customerViewService.getCustomer(order.getCustomerId())
                 .map(customer -> asOrderCreatedEvent(customer, saved))
                 .flatMap(event -> {
-                    LOGGER.info("Placing OrderCreated event on queue: {}", event);
+                    LOGGER.info("EDA: Placing OrderCreated event on queue: {}", event);
                         queue.convertAndSend(ORDER_CREATED_QUEUE, event);
                     return Optional.of(saved);
                 })
                 .map(result -> accepted().body(result))
-                .orElseThrow(() -> new IllegalArgumentException(format("Cannot find customer with ID [%s]", order.getCustomerId())));
+                .orElseThrow(() -> new IllegalArgumentException(format("EDA: Cannot find customer with ID [%s]", order.getCustomerId())));
     }
 
     @SqsListener(value = ORDER_SHIPPED_EVENT_QUEUE, deletionPolicy = ON_SUCCESS)
     public void handle(@NotificationMessage OrderShipped event) {
-        LOGGER.info("Received order shipped event: {}", event);
+        LOGGER.info("EDA: Received order shipped event: {}", event);
         orderService.getOrder(event.getOrderId())
                 .map(o -> orderService.updateOrder(o.withStatus(SHIPPED), event.getOrderId()))
-                .orElseThrow(() -> new IllegalArgumentException(format("Order with id [%s] not found", event.getOrderId())));
+                .orElseThrow(() -> new IllegalArgumentException(format("EDA: Order with id [%s] not found", event.getOrderId())));
     }
 
 }
