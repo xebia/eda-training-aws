@@ -2,7 +2,7 @@ package com.xebia.eda.controller;
 
 import com.xebia.common.domain.Shipment;
 import com.xebia.common.service.InventoryService;
-import com.xebia.eda.domain.OrderCreated;
+import com.xebia.eda.domain.OrderPlaced;
 import com.xebia.eda.domain.OrderShipped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,7 +42,7 @@ public class EdaInventoryController {
     }
 
     @SqsListener(value = ORDER_CREATED_QUEUE, deletionPolicy = ON_SUCCESS)
-    public void handle(OrderCreated event) {
+    public void handle(OrderPlaced event) {
         Instant shipmentDate = Instant.now().plusSeconds(15);
 
         Runnable publisher = () -> {
@@ -61,7 +60,7 @@ public class EdaInventoryController {
         inventoryService.saveShipment(asShipment(event).withShipmentDate(shipmentDate));
     }
 
-    private Shipment asShipment(OrderCreated event) {
+    private Shipment asShipment(OrderPlaced event) {
         return new Shipment(
                 event.getOrderId(),
                 event.getShipmentAddress(),

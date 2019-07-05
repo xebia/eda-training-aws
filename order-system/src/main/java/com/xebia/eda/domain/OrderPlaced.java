@@ -10,7 +10,7 @@ import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 
-public class OrderCreated {
+public class OrderPlaced {
 
     private Long orderId;
     private Long customerId;
@@ -18,10 +18,10 @@ public class OrderCreated {
     private ShipmentAddress shipmentAddress;
     private List<InventoryItem> items;
 
-    public OrderCreated() {
+    public OrderPlaced() {
     }
 
-    public OrderCreated(Long orderId, Long customerId, Instant created, ShipmentAddress shipmentAddress, List<InventoryItem> items) {
+    public OrderPlaced(Long orderId, Long customerId, Instant created, ShipmentAddress shipmentAddress, List<InventoryItem> items) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.created = created;
@@ -29,9 +29,9 @@ public class OrderCreated {
         this.items = items;
     }
 
-    public static OrderCreated asOrderCreatedEvent(Customer customer, Order order) {
+    public static OrderPlaced asOrderCreatedEvent(Customer customer, Order order) {
         ShippingAddress shippingAddress = order.getShippingAddress();
-        return new OrderCreated(
+        return new OrderPlaced(
                 order.getId(),
                 order.getCustomerId(),
                 order.getCreated(),
@@ -93,7 +93,7 @@ public class OrderCreated {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OrderCreated that = (OrderCreated) o;
+        OrderPlaced that = (OrderPlaced) o;
         return Objects.equals(orderId, that.orderId) &&
                 customerId.equals(that.customerId) &&
                 created.equals(that.created) &&
@@ -108,7 +108,7 @@ public class OrderCreated {
 
     @Override
     public String toString() {
-        return "OrderCreated{" +
+        return "OrderPlaced{" +
                 "orderId=" + orderId +
                 ", customerId=" + customerId +
                 ", created=" + created +

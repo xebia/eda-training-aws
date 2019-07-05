@@ -6,7 +6,7 @@ import com.xebia.common.domain.ShipmentAddress;
 import java.time.Instant;
 import java.util.List;
 
-public class OrderCreated {
+public class OrderPlaced {
 
     private Long orderId;
     private Long customerId;
@@ -14,10 +14,10 @@ public class OrderCreated {
     private ShipmentAddress shipmentAddress;
     private List<InventoryItem> items;
 
-    public OrderCreated() {
+    public OrderPlaced() {
     }
 
-    public OrderCreated(Long orderId, Long customerId, Instant created, ShipmentAddress shipmentAddress, List<InventoryItem> items) {
+    public OrderPlaced(Long orderId, Long customerId, Instant created, ShipmentAddress shipmentAddress, List<InventoryItem> items) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.created = created;
@@ -67,7 +67,7 @@ public class OrderCreated {
 
     @Override
     public String toString() {
-        return "OrderCreated{" +
+        return "OrderPlaced{" +
                 "orderId=" + orderId +
                 ", customerId=" + customerId +
                 ", created=" + created +
