@@ -66,7 +66,7 @@ public class EdaOrderController {
                 .map(customer -> asOrderCreatedEvent(customer, saved))
                 .flatMap(event -> {
                     LOGGER.info("Placing OrderCreated event on queue: {}", event);
-                    queue.convertAndSend(ORDER_CREATED_QUEUE, event);
+                        queue.convertAndSend(ORDER_CREATED_QUEUE, event);
                     return Optional.of(saved);
                 })
                 .map(result -> accepted().body(result))
@@ -80,4 +80,5 @@ public class EdaOrderController {
                 .map(o -> orderService.updateOrder(o.withStatus(SHIPPED), event.getOrderId()))
                 .orElseThrow(() -> new IllegalArgumentException(format("Order with id [%s] not found", event.getOrderId())));
     }
+
 }

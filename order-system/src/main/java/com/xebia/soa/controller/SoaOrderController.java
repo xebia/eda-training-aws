@@ -2,7 +2,6 @@ package com.xebia.soa.controller;
 
 import com.xebia.common.domain.Customer;
 import com.xebia.common.domain.Order;
-import com.xebia.common.service.NotificationService;
 import com.xebia.common.service.OrderService;
 import com.xebia.soa.service.ExternalCustomerService;
 import com.xebia.soa.service.ExternalInventoryService;
@@ -22,14 +21,12 @@ public class SoaOrderController {
     private final OrderService orderService;
     private final ExternalInventoryService externalInventoryService;
     private final ExternalCustomerService externalCustomerService;
-    private final NotificationService notificationService;
 
     @Autowired
-    public SoaOrderController(OrderService orderService, ExternalInventoryService externalInventoryService, ExternalCustomerService externalCustomerService, NotificationService notificationService) {
+    public SoaOrderController(OrderService orderService, ExternalInventoryService externalInventoryService, ExternalCustomerService externalCustomerService) {
         this.orderService = orderService;
         this.externalInventoryService = externalInventoryService;
         this.externalCustomerService = externalCustomerService;
-        this.notificationService = notificationService;
     }
 
     @GetMapping("/orders/{id}")
@@ -55,7 +52,6 @@ public class SoaOrderController {
         Order saved = orderService.saveOrder(order.withStatus(INITIATED).withCreatedNow());
         Customer customer = externalCustomerService.getCustomer(order.getCustomerId());
         externalInventoryService.initiateShipment(customer, saved);
-        notificationService.notifyCustomer(customer, saved);
         return saved;
     }
 
@@ -69,8 +65,7 @@ public class SoaOrderController {
         Optional<Order> saved = orderService.getOrder(id);
         return saved.map(o -> {
             Order patched = orderService.updateOrder(o.withStatus(order.getStatus()), id);
-            Customer customer = externalCustomerService.getCustomer(o.getCustomerId());
-            notificationService.notifyCustomer(customer, patched);
+            externalCustomerService.notifyCustomer(o.getCustomerId(), patched.getId());
             return patched;
         }).orElseThrow(() -> new IllegalArgumentException(String.format("Order with id %s not found", id)));
     }

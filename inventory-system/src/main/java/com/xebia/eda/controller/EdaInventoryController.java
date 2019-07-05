@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,7 +46,15 @@ public class EdaInventoryController {
     public void handle(OrderCreated event) {
         Instant shipmentDate = Instant.now().plusSeconds(15);
 
-        Runnable publisher = () -> topic.sendNotification(ORDER_SHIPPED_TOPIC, new OrderShipped(event.getOrderId(), event.getCustomerId()), "Order shipped!");
+        Runnable publisher = () -> {
+            try {
+                OrderShipped orderShippedEvent = new OrderShipped(event.getOrderId(), event.getCustomerId(), LocalDateTime.ofInstant(shipmentDate, OffsetDateTime.now().getOffset()));
+                topic.sendNotification(ORDER_SHIPPED_TOPIC, orderShippedEvent, "Order shipped!");
+                LOGGER.info("Sent OrderShipped event {}",orderShippedEvent);
+            } catch(Exception ex) {
+                LOGGER.error("Failed to send OrderShipped Event due to {}", ex.getMessage(), ex);
+            }
+        };
         scheduler.schedule(publisher, shipmentDate);
         LOGGER.info("Scheduled order with id=[{}] to be shipped at {}", event.getOrderId(), shipmentDate);
 

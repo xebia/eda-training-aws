@@ -40,27 +40,22 @@ public class Order {
     private Long id;
 
     @Column(name = "customer_id")
-    @NotNull
     private Long customerId;
 
     @Embedded
-    @NotNull
     @Valid
     private ShippingAddress shippingAddress;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    @NotNull
     private OrderState status = INITIATED;
 
     @Column(name = "created")
-    @NotNull
     private Instant created;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     @Valid
-    @NotEmpty
     private final List<OrderLine> lines = new ArrayList<OrderLine>();
 
     public Long getId() { return id; }

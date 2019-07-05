@@ -90,5 +90,6 @@ public class LocalStackConfig {
                 .configure(WRITE_DATES_AS_TIMESTAMPS, false)
                 .registerModule(new JavaTimeModule());
     }
+
 }
 

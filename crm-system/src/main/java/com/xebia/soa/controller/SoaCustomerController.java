@@ -2,6 +2,7 @@ package com.xebia.soa.controller;
 
 import com.xebia.common.domain.Customer;
 import com.xebia.common.service.CustomerService;
+import com.xebia.common.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,10 +15,12 @@ import java.util.Optional;
 public class SoaCustomerController {
 
     private final CustomerService customerService;
+    private final NotificationService notificationService;
 
     @Autowired
-    public SoaCustomerController(CustomerService customerService) {
+    public SoaCustomerController(CustomerService customerService, NotificationService notificationService) {
         this.customerService = customerService;
+        this.notificationService = notificationService;
     }
 
     @GetMapping("/customers/{id}")
@@ -42,5 +45,11 @@ public class SoaCustomerController {
     @ResponseBody
     public Customer updateCustomer(@Valid @RequestBody Customer customer, @PathVariable("id") Long id) {
         return customerService.updateCustomer(customer, id);
+    }
+
+    @PutMapping("/customers/{id}/notifications")
+    public void notifyCustomer(@PathVariable("id") Long id, @RequestParam("orderId") Long orderId) {
+        customerService.getCustomer(id)
+                .ifPresent(customer -> notificationService.notifyCustomer(customer, orderId));
     }
 }

@@ -1,8 +1,8 @@
 package com.xebia.eda.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xebia.common.domain.Customer;
 import com.xebia.common.service.CustomerService;
+import com.xebia.common.service.NotificationService;
 import com.xebia.eda.domain.OrderShipped;
 import com.xebia.eda.replication.CustomerReplicator;
 import org.slf4j.Logger;
@@ -27,12 +27,12 @@ public class EdaCustomerController {
     private static final Logger LOGGER = LoggerFactory.getLogger(EdaCustomerController.class);
 
     private final CustomerService customerService;
-    private final CustomerReplicator stream;
+    private final NotificationService notificationService;
 
     @Autowired
-    public EdaCustomerController(CustomerService customerService, CustomerReplicator stream) {
+    public EdaCustomerController(CustomerService customerService, NotificationService notificationService) {
         this.customerService = customerService;
-        this.stream = stream;
+        this.notificationService = notificationService;
     }
 
     @GetMapping("/customers/{id}")
@@ -50,31 +50,19 @@ public class EdaCustomerController {
     @PostMapping("/customers")
     @ResponseBody
     public Customer saveCustomer(@Valid @RequestBody Customer customer) {
-        Customer saved = customerService.saveCustomer(customer);
-        stream.replicateCustomer(saved);
-        return saved;
+        return customerService.saveCustomer(customer);
     }
 
     @PutMapping("/customers/{id}")
     @ResponseBody
     public Customer updateCustomer(@Valid @RequestBody Customer customer, @PathVariable("id") Long id) {
-        Customer saved = customerService.updateCustomer(customer, id);
-        stream.replicateCustomer(saved);
-        return saved;
+        return customerService.updateCustomer(customer, id);
     }
 
     @SqsListener(value = ORDER_SHIPPED_NOTIFICATION_QUEUE, deletionPolicy = ON_SUCCESS)
     public void handle(@NotificationMessage OrderShipped event) {
         LOGGER.info("Received order shipped event: {}", event);
         customerService.getCustomer(event.getCustomerId())
-            .ifPresent(customer -> {
-                if (customer.isNotificationEmail()) {
-                    LOGGER.info(format("Sending email to customer with ID [%s]: Order with ID [%s] shipped!", customer.getId(), event.getOrderId()));
-                }
-
-                if (customer.isNotificationText()) {
-                    LOGGER.info(format("Sending SMS to customer with ID [%s]: Order with ID [%s] shipped!", customer.getId(), event.getOrderId()));
-                }
-            });
+                .ifPresent(customer -> notificationService.notifyCustomer(customer, event.getOrderId()));
     }
 }
