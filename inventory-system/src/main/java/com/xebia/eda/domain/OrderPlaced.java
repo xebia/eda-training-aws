@@ -1,6 +1,7 @@
 package com.xebia.eda.domain;
 
 import com.xebia.common.domain.InventoryItem;
+import com.xebia.common.domain.Shipment;
 import com.xebia.common.domain.ShipmentAddress;
 
 import java.time.Instant;
@@ -74,5 +75,14 @@ public class OrderPlaced {
                 ", shipmentAddress=" + shipmentAddress +
                 ", items=" + items +
                 '}';
+    }
+
+
+    public Shipment asShipment() {
+        return new Shipment(
+                getOrderId(),
+                getShipmentAddress(),
+                getItems()
+        );
     }
 }

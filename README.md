@@ -21,7 +21,10 @@
 curl -X POST --data '{"customerId": 1,"shippingAddress": {"street": "Sesamstreet","number": "5b","zipCode": "3456AB","city": "Amsterdam","country": "Netherlands"   },   "lines": [{"productId": 1001,"productName": "Fancy Gadget #1","itemCount": 1,"priceCents": 100},{"productId": 1002,"productName": "Fancy Gadget #2","itemCount": 2,"priceCents": 200},{"productId": 1003,"productName": "Fancy Gadget #3","itemCount": 3,"priceCents": 300},{"productId": 1004,"productName": "Fancy Gadget #4","itemCount": 4,"priceCents": 400},{"productId": 1005,"productName": "Fancy Gadget #5","itemCount": 5,"priceCents": 500}   ] }' http://localhost:9000/order-api/v1/orders --header "Content-Type:application/json"
 ```
 
-
+###Build without Docker
+```properties
+mvn install -Ddockerfile.skip=true
+```
  
 ### Build Docker
 #### Push Docker image 

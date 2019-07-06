@@ -38,14 +38,17 @@ public class SoaInventoryController {
     @ResponseBody
     public Shipment ship(@Valid @RequestBody Shipment shipment) {
         Instant shipmentDate = Instant.now().plusSeconds(15);
+        scheduleFakeShipmentNotification(shipment, shipmentDate);
+        return inventoryService.saveShipment(shipment.withShipmentDate(shipmentDate));
+    }
+
+    private void scheduleFakeShipmentNotification(Shipment shipment, Instant shipmentDate) {
         scheduler.schedule(() -> {
             LOGGER.info("SOA: call order system to notify that order with id=[{}] is shipped at [{}]", shipment.getOrderId(), shipmentDate);
             externalOrderService.notifyOrderShipped(shipment.getOrderId());
         }, shipmentDate);
 
         LOGGER.info("SOA: Scheduled order with id=[{}] to be shipped at {}", shipment.getOrderId(), shipmentDate);
-
-        return inventoryService.saveShipment(shipment.withShipmentDate(shipmentDate));
     }
 
     @GetMapping("/shipments/{id}")
