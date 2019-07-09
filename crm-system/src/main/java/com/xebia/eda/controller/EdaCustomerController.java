@@ -59,10 +59,20 @@ public class EdaCustomerController {
         return customerService.updateCustomer(customer, id);
     }
 
-    @SqsListener(value = ORDER_SHIPPED_NOTIFICATION_QUEUE, deletionPolicy = ON_SUCCESS)
-    public void handle(@NotificationMessage OrderShipped event) {
-        LOGGER.info("EDA: Received order shipped event: {}", event);
-        customerService.getCustomer(event.getCustomerId())
-                .ifPresent(customer -> notificationService.notifyCustomer(customer, event.getOrderId()));
+    /**
+     * <h3>Exercise 2c</h3>
+     * Task: Consume messages from the 'orderShippedNotification' SQS queue, which were broadcasted by SNS.
+     * The method below is a copy from the logic of the @see SOACustomerController and needs to be changed.
+     * For this exercise to succeed, replace this REST endpoint as follows:
+     * - Change the method to consume 'OrderShipped' events from a SQS queue
+     * - remove the REST endpoint annotations (@PostMapping/@ResponseBody/@RequestBody/@PathVariable)
+     * - add an @SqsListener annotation with configuration to listen to the 'orderShippedNotification' SQS queue and the correct 'SqsMessageDeletionPolicy'
+     * - Hint: don't forget to annotate the 'OrderShipped' event with the @NotificationMessage annotation.
+     */
+    @PutMapping("/customers/{id}/notifications")
+    public void notifyCustomer(@PathVariable("id") Long id, @RequestParam("orderId") Long orderId) {
+        LOGGER.info("EDA: Notify customer that order is shipped");
+        customerService.getCustomer(id)
+                .ifPresent(customer -> notificationService.notifyCustomer(customer, orderId));
     }
 }

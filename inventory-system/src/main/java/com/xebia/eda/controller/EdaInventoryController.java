@@ -36,8 +36,8 @@ public class EdaInventoryController {
 
     /**
      * <h3>Exercise 1b</h3>
-     * Consume messages from the 'orderCreated' SQS queue.
-     * The method below is a copy from the logic of the @see SOAInventoryController.
+     * Task: Consume messages from the 'orderCreated' SQS queue.
+     * The method below is a copy from the logic of the @see SOAInventoryController and needs to be changed.
      * For this exercise to succeed, replace the REST endpoint 'shipments' as follows:
      * - Change the method to consume 'OrderPlaced' events from a SQS queue (no return type)
      * - remove the REST endpoint annotations (@PostMapping/@ResponseBody)
@@ -52,6 +52,17 @@ public class EdaInventoryController {
         return inventoryService.saveShipment(shipment.withShipmentDate(shipmentDate));
     }
 
+
+    /**
+     * <h3>Exercise 2a</h3>
+     * Task: Instead of calling the order-system directly when the order is shipped emit an 'OrderShipped' event on a SNS topic, which
+     * then can be consumed by the other systems.
+     * The implementation below is a copy from the logic of the @see SOAInventoryController and needs to be changed.
+     * For this exercise to succeed, replace the 'externalOrderService.notifyOrderShipped(...)' call as follows:
+     * - Change the method signature to accept an 'OrderPlaced' event previously consumed instead of a 'Shipment'
+     * - create an instance of 'OrderShipped' using the data from 'OrderPlaced' and 'shipmentDate'
+     * - put the OrderShipped event to the pre-configured 'orderShipped' SNS topic using the NotificationMessagingTemplate.sendNotification(...) method.
+     */
     private void scheduleFakeShipmentNotification(Shipment shipment, Instant shipmentDate) {
         scheduler.schedule(() -> {
             LOGGER.info("EDA: call order system to notify that order with id=[{}] is shipped at [{}]", shipment.getOrderId(), shipmentDate);

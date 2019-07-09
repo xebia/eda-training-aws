@@ -65,7 +65,7 @@ public class EdaOrderController {
      * <h3>Exercise 1a</h3>
      * Task: Decouple the inventory-system from the order-system by means of the
      * SQS queue 'orderCreated'.
-     * The method below is a copy from the logic of the @see SOAOrderController.
+     * The method below is a copy from the logic of the @see SOAOrderController and needs to be changed.
      * For this exercise to succeed, replace the SOA call 'ExternalInventoryService.initiateShipment(...)' with an EDA counterpart:
      * - Transform the Order to an OrderPlaced event (see OrderPlaced.asOrderPlacedEvent(...))
      * - put the OrderPlaced event to the pre-configured 'orderCreated' SQS queue using the QueueMessagingTemplate.convertAndSend(...) method.
@@ -78,5 +78,28 @@ public class EdaOrderController {
         //TODO: replace following line
         externalInventoryService.initiateShipment(customer, saved);
         return accepted().body(saved);
+    }
+
+    /**
+     * <h3>Exercise 2b</h3>
+     * Task: Consume messages from the 'orderShippedEvent' SQS queue, which were broadcasted by SNS.
+     * The method below is a copy from the logic of the @see SOAOrderController and needs to be changed.
+     * For this exercise to succeed, replace this REST endpoint as follows:
+     * - Change the method to consume 'OrderShipped' events from a SQS queue (no return type)
+     * - remove the REST endpoint annotations (@PostMapping/@ResponseBody/@RequestBody/@PathVariable)
+     * - add an @SqsListener annotation with configuration to listen to the 'orderShippedEvent' SQS queue and the correct 'SqsMessageDeletionPolicy'
+     * - remove the RPC call 'customerService.notifyCustomer(...)' which is not needed anymore since the CRM-system will consume the same event by its own.
+     * - Hint: don't forget to annotate the 'OrderShipped' event with the @NotificationMessage annotation. Do you know why this is required?
+     */
+    @PatchMapping("/orders/{id}")
+    @ResponseBody
+    public Order patchOrder(@Valid @RequestBody Order order, @PathVariable("id") Long id) {
+        Optional<Order> saved = orderService.getOrder(id);
+        return saved.map(o -> {
+            LOGGER.info("SOA: Order is shipped: {}", id);
+            Order patched = orderService.updateOrder(o.withStatus(order.getStatus()), id);
+            customerService.notifyCustomer(o.getCustomerId(), patched.getId());
+            return patched;
+        }).orElseThrow(() -> new IllegalArgumentException(String.format("Order with id %s not found", id)));
     }
 }
