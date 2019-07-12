@@ -3,6 +3,7 @@ package com.xebia.soa.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xebia.common.DomainSamples;
 import com.xebia.common.domain.Customer;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 @ActiveProfiles({"default", "test"})
+@Ignore
 public class SoaCustomerControllerTests {
 
 

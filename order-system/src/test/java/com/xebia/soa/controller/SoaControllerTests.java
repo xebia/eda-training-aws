@@ -6,6 +6,7 @@ import com.xebia.common.domain.Customer;
 import com.xebia.common.domain.Order;
 import com.xebia.soa.service.ExternalCustomerService;
 import com.xebia.soa.service.ExternalInventoryService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 @ActiveProfiles({"default", "test"})
+@Ignore
 public class SoaControllerTests {
 
     @Autowired
