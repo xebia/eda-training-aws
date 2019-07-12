@@ -1,69 +1,38 @@
 # eda-training-aws
 
-### Startup environment
-#### Application environment
-- `docker-compose up`
-- Create AWS resources: run `./scripts/create-aws-resources.sh`
+### Install required software
+Git: https://git-scm.com/downloads
+Docker: https://docs.docker.com/install/ (requires an account and system restart)
+AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
+JDK (> version 7): https://www.oracle.com/technetwork/java/javase/downloads/index.html
+Follow the installation instructions in the given links for your operating system. 
 
-#### AWS (localstack)
-- `git clone https://github.com/localstack/localstack.git`
-- `cd localstack`
-- `TMPDIR=/private$TMPDIR DEFAULT_REGION=eu-west-1 docker-compose up -d`
-- For faster startup minimize localstack components via `SERVICES` env variable, only selecting the necessary services:
-    - `TMPDIR=/private$TMPDIR SERVICES="sns,sqs,kinesis,dynamodb,cloudwatch" DEFAULT_REGION=eu-west-1 docker-compose up -d`
+### Setup labs project:
+From a directory of your choice type: git clone https://github.com/xebia/eda-training-aws
+Go into the newly created directory: cd eda-training-aws
 
+### Setup localstack, which is a local AWS environment and databases
+From the project root <eda-training-aws> go into the <scripts> directory:  `cd scripts`
+- Run: `start-local-stack.bat` for windows or `./start-local-stack.sh` for mac, linux
+- Run: `start-databases.bat` for windows or `./start-databases.sh` for mac, linux
 
-### Start Application
-#### UI
-- Open browser on URL: `http://localhost:9000/`
-- Manually insert an order: 
+### Compile project
+Move back to the project root directory <eda-training-aws>: cd ..
+- Run: `mvnw.bat install` for windows or `./mvnw install` for mac, linux
+All projects must compile successfully
+
+### Start Applications
+From your IDE then start the applications:
+- order-system: `com.xebia.OrderApplication`
+- inventory-system: `com.xebia.InventoryApplication`
+- crm-system: `com.xebia.CRMApplication`
+
+### Insert an order
+- Open browser on URL: `http://localhost:9000/` to insert an order via the web-interface
+
+- Manually insert an order with `curl`: 
 ```
 curl -X POST --data '{"customerId": 1,"shippingAddress": {"street": "Sesamstreet","number": "5b","zipCode": "3456AB","city": "Amsterdam","country": "Netherlands"   },   "lines": [{"productId": 1001,"productName": "Fancy Gadget #1","itemCount": 1,"priceCents": 100},{"productId": 1002,"productName": "Fancy Gadget #2","itemCount": 2,"priceCents": 200},{"productId": 1003,"productName": "Fancy Gadget #3","itemCount": 3,"priceCents": 300},{"productId": 1004,"productName": "Fancy Gadget #4","itemCount": 4,"priceCents": 400},{"productId": 1005,"productName": "Fancy Gadget #5","itemCount": 5,"priceCents": 500}   ] }' http://localhost:9000/order-api/v1/orders --header "Content-Type:application/json"
 ```
 
-###Build without Docker
-```properties
-mvn install -Ddockerfile.skip=true
-```
- 
-### Build Docker
-#### Push Docker image 
-
-1. On Mac only: Expose demon without TLS
-
-See: https://forums.docker.com/t/spotify-docker-maven-plugin-cant-connect-to-localhost-2375/9093/16
-```
-docker run -d -v /var/run/docker.sock:/var/run/docker.sock -p 2375:2375 bobrik/socat TCP4-LISTEN:2375,fork,reuseaddr UNIX-CONNECT:/var/run/docker.sock
-```
-
-2. Add docker.io registry credentials in `~/.m2/settings.xml`
-```xml
-        <server>
-            <id>docker.io</id>
-            <username>docker-account-name</username>
-            <password>pwd</password>
-        </server>
-```
-The `docker-account-name` is defined as env variable in the parent `pom.xml` as:
-```xml
-<properties>
-    <docker.image.prefix>upeter</docker.image.prefix>>
-</properties>
-
-```
-
-3a. Build and push an image in a sub-project
-- `cd crm-system`
-- ` mvn install dockerfile:build dockerfile:push`
-
-3b. Build and push all images
-From project root:
-- Build images locally
-```properties
-mvn install
-```
-
-- Push images
-```properties
-mvn -Dmaven.deploy.skip deploy
-```
+### Stop localstack and databases
