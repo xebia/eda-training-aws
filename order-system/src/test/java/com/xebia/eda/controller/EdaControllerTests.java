@@ -52,7 +52,7 @@ public class EdaControllerTests {
     @Test
     public void shouldInsertOrder() throws Exception {
         Customer customer = DomainSamples.CUSTOMER_1;
-        when(customerViewService.getCustomer(customer.getId())).thenReturn(Optional.of(customer));
+        when(customerViewService.getCustomer(customer.getId())).thenReturn(customer);
 
         Order order = DomainSamples.createInitialOrder(5);
         MvcResult response = mockMvc.perform(post("/order-api/v2/orders")

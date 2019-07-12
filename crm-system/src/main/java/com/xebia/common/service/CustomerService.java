@@ -1,12 +1,11 @@
 package com.xebia.common.service;
 
 import com.xebia.common.domain.Customer;
-import com.xebia.eda.replication.CustomerReplicator;
+import com.xebia.eda.replication.CustomerReplicatorWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,11 +14,11 @@ import java.util.stream.Collectors;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
-    private final CustomerReplicator stream;
+    private final CustomerReplicatorWriter stream;
 
 
     @Autowired
-    public CustomerService(CustomerRepository customerRepository, CustomerReplicator stream) {
+    public CustomerService(CustomerRepository customerRepository, CustomerReplicatorWriter stream) {
         this.customerRepository = customerRepository;
         this.stream = stream;
     }
@@ -32,9 +31,28 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
+    /**
+     * <h3>Exercise 3a-2</h3>
+     * Task: replicate a Customer whenever it is saved.
+     * For this exercise to succeed do the following:
+     * - Use the injected @see CustomerReplicatorWriter to replicate a saved Customer
+     */
     public Customer saveCustomer(Customer customer ) {
         Customer saved = customerRepository.save(customer);
-        stream.replicateCustomer(saved);
+        //TODO: replicate customer
+        return saved;
+    }
+
+    /**
+     * <h3>Exercise 3a-3</h3>
+     * Task: replicate a Customer whenever it is updated.
+     * For this exercise to succeed do the following:
+     * - Use the injected @see CustomerReplicatorWriter to replicate a updated Customer
+     */
+    public Customer updateCustomer(Customer customer, Long id) {
+        Assert.isTrue(customer.getId() == null || customer.getId().equals(id), "Conflicting customer id");
+        Customer saved = customerRepository.save(customer.withId(id));
+        //TODO: replicate customer
         return saved;
     }
 
@@ -43,10 +61,4 @@ public class CustomerService {
     }
 
 
-    public Customer updateCustomer(Customer customer, Long id) {
-        Assert.isTrue(customer.getId() == null || customer.getId().equals(id), "Conflicting customer id");
-        Customer saved = customerRepository.save(customer.withId(id));
-        stream.replicateCustomer(saved);
-        return saved;
-    }
 }
