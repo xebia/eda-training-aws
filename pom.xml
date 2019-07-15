@@ -25,7 +25,7 @@
 
     <modules>
         <module>order-system</module>
-        <module>order-ui</module>
+        <!--<module>order-ui</module>-->
         <module>crm-system</module>
         <module>inventory-system</module>
     </modules>
