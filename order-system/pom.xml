@@ -35,7 +35,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/classes/resources/</outputDirectory>
+                            <outputDirectory>${project.basedir}/src/main/resources/static</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.parent.basedir}/order-ui/src/main/web/dist/np-app/
