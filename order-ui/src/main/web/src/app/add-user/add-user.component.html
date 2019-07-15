@@ -1,21 +1,50 @@
-<div class="col-md-6">
-  <h2 class="text-center">Add User</h2>
+<div class="col-md-16">
+  <h2 class="text-center">Add Customer</h2>
   <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input formControlName="name" placeholder="Name" name="name" class="form-control" id="name">
+    </div>
+
     <div class="form-group">
       <label for="email">Email address:</label>
-      <input type="email" formControlName="email" placeholder="Email" name="email" class="form-control" id="email">
+      <input type="email" formControlName="email" placeholder="Email" name="email" class="form-control"
+             id="email">
+    </div>
+    <div class="form-group">
+      <label for="mobile">Mobile phone:</label>
+      <input type="mobile" formControlName="mobile" placeholder="Mobile phone" name="mobile" class="form-control"
+             id="mobile">
     </div>
 
     <div class="form-group">
-      <label for="firstName">First Name:</label>
-      <input formControlName="firstName" placeholder="First Name" name="firstName" class="form-control" id="firstName">
+      <label for="notificationEmail">Notifications via Email:</label>
+      <input type="checkbox" formControlName="notificationEmail" placeholder="Email notifications" name="notificationEmail" class="form-control"
+             id="notificationEmail">
+      <label for="notificationText">Notifications via Text:</label>
+      <input type="checkbox" formControlName="notificationText" placeholder="Text notifications" name="notificationText" class="form-control"
+             id="notificationText">
     </div>
 
-    <div class="form-group">
-      <label for="lastName">Last Name:</label>
-      <input formControlName="lastName" placeholder="Last name" name="lastName" class="form-control" id="lastName">
+    <div formGroupName="address">
+      <div class="form-group">
+        <label for="street">Street / Number:</label>
+        <input formControlName="street" placeholder="Street" name="street" class="form-control" id="street">
+        <input formControlName="number" placeholder="Number" name="number" class="form-control" id="number">
+      </div>
+      <div class="form-group">
+        <label for="zipCode">Zip Code / City:</label>
+        <input formControlName="zipCode" placeholder="Zip Code" name="zipCode" class="form-control" id="zipCode"
+               maxlength="10">
+        <input formControlName="city" placeholder="City" name="city" class="form-control" id="city">
+      </div>
+      <div class="form-group">
+        <label for="country">Country:</label>
+        <input formControlName="country" placeholder="Country" name="country" class="form-control" id="country">
+      </div>
     </div>
-
-    <button class="btn btn-success">Update</button>
+    <button class="btn btn-success">Add</button>
   </form>
 </div>
+

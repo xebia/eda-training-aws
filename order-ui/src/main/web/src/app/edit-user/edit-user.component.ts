@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from "../service/user.service";
 import {Router} from "@angular/router";
-import {User} from "../model/user.model";
+import {Customer} from "../model/user.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {first} from "rxjs/operators";
 
@@ -12,7 +12,7 @@ import {first} from "rxjs/operators";
 })
 export class EditUserComponent implements OnInit {
 
-  user: User;
+  user: Customer;
   editForm: FormGroup;
   constructor(private formBuilder: FormBuilder,private router: Router, private userService: UserService) { }
 
@@ -25,9 +25,18 @@ export class EditUserComponent implements OnInit {
     }
     this.editForm = this.formBuilder.group({
       id: [],
+      name: ['', Validators.required],
       email: ['', Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required]
+      mobile: ['', Validators.required],
+        notificationEmail: [''],
+        notificationText: [''],
+        address: this.formBuilder.group({
+            street: ['', [Validators.required]],
+            number: ['', [Validators.required]],
+            zipCode: ['', [Validators.required]],
+            city: ['', [Validators.required]],
+            country: ['', [Validators.required]]
+        })
     });
     this.userService.getUserById(+userId)
       .subscribe( data => {
