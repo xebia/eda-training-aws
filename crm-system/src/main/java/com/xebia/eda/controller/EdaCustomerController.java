@@ -29,24 +29,28 @@ public class EdaCustomerController {
         this.notificationService = notificationService;
     }
 
+    @CrossOrigin
     @GetMapping("/customers/{id}")
     @ResponseBody
     public Optional<Customer> getCustomer(@PathVariable("id") Long id) {
         return customerService.getCustomer(id);
     }
 
+    @CrossOrigin
     @GetMapping("/customers")
     @ResponseBody
     public List<Customer> getCustomers() {
         return customerService.getCustomers();
     }
 
+    @CrossOrigin
     @PostMapping("/customers")
     @ResponseBody
     public Customer saveCustomer(@Valid @RequestBody Customer customer) {
         return customerService.saveCustomer(customer);
     }
 
+    @CrossOrigin
     @PutMapping("/customers/{id}")
     @ResponseBody
     public Customer updateCustomer(@Valid @RequestBody Customer customer, @PathVariable("id") Long id) {
