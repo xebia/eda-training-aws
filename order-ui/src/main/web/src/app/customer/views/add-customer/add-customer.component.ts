@@ -30,7 +30,9 @@ export class AddCustomerComponent implements OnInit {
                 ])],
                 city: ['', Validators.required],
                 country: ['', Validators.required],
-            })
+            }),
+            notificationEmail: [''],
+            notificationText: [''],
         });
     }
 

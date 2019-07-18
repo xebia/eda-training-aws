@@ -1,7 +1,7 @@
 import {RouterModule, Routes} from '@angular/router';
 
 const routes: Routes = [
-    {path: '', redirectTo: '/customer', pathMatch: 'full'},
+    {path: '', redirectTo: '/order', pathMatch: 'full'},
 ];
 
 export const AppRouting = RouterModule.forRoot(routes);

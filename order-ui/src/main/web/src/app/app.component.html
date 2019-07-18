@@ -8,10 +8,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/customer" routerLinkActive="active">Customers</a>
+                    <a class="nav-link" routerLink="/order" routerLinkActive="active">Orders</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/order" routerLinkActive="active">Orders</a>
+                    <a class="nav-link" routerLink="/customer" routerLinkActive="active">Customers</a>
                 </li>
             </ul>
             <ul class="navbar-nav">
@@ -20,8 +20,8 @@
                         API version (current: {{getVersion()}})
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" (click)="changeVersion('v1')" href="#">V1</a>
-                        <a class="dropdown-item" (click)="changeVersion('v2')" href="#">V2</a>
+                        <a class="dropdown-item" (click)="changeVersion('v1')" href="#">V1 (SOA)</a>
+                        <a class="dropdown-item" (click)="changeVersion('v2')" href="#">V2 (EDA)</a>
                     </div>
                 </li>
             </ul>

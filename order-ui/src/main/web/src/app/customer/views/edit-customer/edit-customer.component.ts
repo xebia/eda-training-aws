@@ -37,7 +37,9 @@ export class EditCustomerComponent implements OnInit {
                 ])],
                 city: ['', Validators.required],
                 country: ['', Validators.required],
-            })
+            }),
+            notificationEmail: [''],
+            notificationText: [''],
         });
         this.userService.getCustomerById(+userId)
             .subscribe(data => {
