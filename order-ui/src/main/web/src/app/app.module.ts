@@ -1,32 +1,22 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { AppComponent } from './app.component';
-import { LoginComponent } from './login/login.component';
-import {routing} from "./app.routing";
-import {AuthenticationService} from "./service/auth.service";
-import {ReactiveFormsModule} from "@angular/forms";
-import {HttpClientModule} from "@angular/common/http";
-import { AddUserComponent } from './add-user/add-user.component';
-import { EditUserComponent } from './edit-user/edit-user.component';
-import {ListUserComponent} from "./list-user/list-user.component";
-import {UserService} from "./service/user.service";
+import {AppComponent} from './app.component';
+import {AppRouting} from "./app.routing";
+import {CustomerModule} from "./customer/customer.module";
+import {OrderModule} from "./order/order.module";
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    ListUserComponent,
-    AddUserComponent,
-    EditUserComponent
-  ],
-  imports: [
-    BrowserModule,
-    routing,
-    ReactiveFormsModule,
-    HttpClientModule
-  ],
-  providers: [AuthenticationService, UserService],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+    ],
+    imports: [
+        BrowserModule,
+        AppRouting,
+        CustomerModule,
+        OrderModule
+    ],
+    bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

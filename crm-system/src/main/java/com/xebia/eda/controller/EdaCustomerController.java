@@ -4,7 +4,6 @@ import com.xebia.common.domain.Customer;
 import com.xebia.common.service.CustomerService;
 import com.xebia.common.service.NotificationService;
 import com.xebia.eda.domain.OrderShipped;
-import com.xebia.eda.replication.CustomerReplicator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.xebia.eda.configuration.Sqs.ORDER_SHIPPED_NOTIFICATION_QUEUE;
-import static java.lang.String.format;
 import static org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy.ON_SUCCESS;
 
 @RestController
