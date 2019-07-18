@@ -62,12 +62,6 @@ public class EdaCustomerController {
         return customerService.updateCustomer(customer, id);
     }
 
-    @DeleteMapping("/customers/{id}")
-    @ResponseStatus(NO_CONTENT)
-    public void deleteCustomer(@PathVariable("id") Long id) {
-        customerService.deleteCustomer(id);
-    }
-
     @SqsListener(value = ORDER_SHIPPED_NOTIFICATION_QUEUE, deletionPolicy = ON_SUCCESS)
     public void handle(@NotificationMessage OrderShipped event) {
         LOGGER.info("EDA: Received order shipped event: {}", event);

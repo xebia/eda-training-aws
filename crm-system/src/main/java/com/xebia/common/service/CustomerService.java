@@ -50,7 +50,4 @@ public class CustomerService {
         return saved;
     }
 
-    public void deleteCustomer(Long id) {
-        customerRepository.deleteById(id);
-    }
 }
