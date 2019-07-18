@@ -14,6 +14,17 @@
                     <a class="nav-link" routerLink="/order" routerLinkActive="active">Orders</a>
                 </li>
             </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        API version (current: {{getVersion()}})
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" (click)="changeVersion('v1')" href="#">V1</a>
+                        <a class="dropdown-item" (click)="changeVersion('v2')" href="#">V2</a>
+                    </div>
+                </li>
+            </ul>
         </div>
     </nav>
     <router-outlet></router-outlet>
