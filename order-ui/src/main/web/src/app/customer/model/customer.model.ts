@@ -6,4 +6,6 @@ export class Customer {
     mobile: string;
     email: string;
     address: Address;
+    notificationEmail: boolean;
+    notificationText: boolean;
 }
