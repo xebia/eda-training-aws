@@ -12,8 +12,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-
 @RestController
 @RequestMapping(value = "/customer-api/v1")
 public class SoaCustomerController {
@@ -51,12 +49,6 @@ public class SoaCustomerController {
     @ResponseBody
     public Customer updateCustomer(@Valid @RequestBody Customer customer, @PathVariable("id") Long id) {
         return customerService.updateCustomer(customer, id);
-    }
-
-    @DeleteMapping("/customers/{id}")
-    @ResponseStatus(NO_CONTENT)
-    public void deleteCustomer(@PathVariable("id") Long id) {
-        customerService.deleteCustomer(id);
     }
 
     @PutMapping("/customers/{id}/notifications")

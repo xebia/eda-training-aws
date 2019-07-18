@@ -60,7 +60,4 @@ public class CustomerService {
         return customers.stream().map(this::saveCustomer).collect(Collectors.toList());
     }
 
-    public void deleteCustomer(Long id) {
-        customerRepository.deleteById(id);
-    }
 }
