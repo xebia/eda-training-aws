@@ -4,7 +4,6 @@ import com.xebia.common.domain.Customer;
 import com.xebia.common.service.CustomerService;
 import com.xebia.common.service.NotificationService;
 import com.xebia.eda.domain.OrderShipped;
-import com.xebia.eda.replication.CustomerReplicator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.xebia.eda.configuration.Sqs.ORDER_SHIPPED_NOTIFICATION_QUEUE;
-import static java.lang.String.format;
 import static org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy.ON_SUCCESS;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping(value = "/customer-api/v2")
@@ -61,6 +60,12 @@ public class EdaCustomerController {
     @ResponseBody
     public Customer updateCustomer(@Valid @RequestBody Customer customer, @PathVariable("id") Long id) {
         return customerService.updateCustomer(customer, id);
+    }
+
+    @DeleteMapping("/customers/{id}")
+    @ResponseStatus(NO_CONTENT)
+    public void deleteCustomer(@PathVariable("id") Long id) {
+        customerService.deleteCustomer(id);
     }
 
     @SqsListener(value = ORDER_SHIPPED_NOTIFICATION_QUEUE, deletionPolicy = ON_SUCCESS)

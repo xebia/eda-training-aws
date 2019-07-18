@@ -1,0 +1,68 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-center">Place order</h2>
+            <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <label for="customerId">Customer:</label>
+                    <select name="customerId" formControlName="customerId" class="form-control" id="customerId">
+                        <option value="">-- Select customer --</option>
+                        <option *ngFor="let customer of customers" value="{{customer.id}}">{{customer.name}}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="line1">Order line 1:</label>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <select name="line1" formControlName="line1" class="form-control" id="line1">
+                                <option value="">-- Select product --</option>
+                                <option *ngFor="let product of products" value="{{product.productId}}">{{product.productName}} (&euro;{{product.priceCents / 100}})</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <input formControlName="line1Count" placeholder="No. of items" name="line1Count" class="form-control"
+                                   id="line1Count">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="line1">Order line 2 (optional):</label>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <select name="line2" formControlName="line2" class="form-control" id="line2">
+                                <option value="">-- Select product --</option>
+                                <option *ngFor="let product of products" value="{{product.productId}}">{{product.productName}} (&euro;{{product.priceCents / 100}})</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <input formControlName="line2Count" placeholder="No. of items" name="line2Count" class="form-control"
+                                   id="line2Count">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="line1">Order line 3 (optional):</label>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <select name="line3" formControlName="line3" class="form-control" id="line3">
+                                <option value="">-- Select product --</option>
+                                <option *ngFor="let product of products" value="{{product.productId}}">{{product.productName}} (&euro;{{product.priceCents / 100}})</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <input formControlName="line3Count" placeholder="No. of items" name="line3Count" class="form-control"
+                                   id="line3Count">
+                        </div>
+                    </div>
+
+                </div>
+                <button class="btn btn-success">Place</button>
+            </form>
+        </div>
+    </div>
+</div>

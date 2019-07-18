@@ -1,0 +1,26 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Manage orders</h4>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>State</th>
+                    <th>Lines</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let order of orders">
+                    <td>{{order.id}}</td>
+                    <td>{{getCustomerById(order.customerId)?.name}}</td>
+                    <td>{{order.status}}</td>
+                    <td>{{reduceOrderLines(order.lines)}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <button class="btn btn-primary" (click)="placeOrder()">Place order</button>
+        </div>
+    </div>
+</div>

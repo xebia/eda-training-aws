@@ -49,4 +49,8 @@ public class CustomerService {
         stream.replicateCustomer(saved);
         return saved;
     }
+
+    public void deleteCustomer(Long id) {
+        customerRepository.deleteById(id);
+    }
 }
