@@ -18,7 +18,7 @@ export class ListCustomerComponent implements OnInit {
     ngOnInit() {
         this.customerService.getCustomers()
             .subscribe(data => {
-                this.customers = data;
+                this.customers = data.sort((a, b) => a.id - b.id);
             });
     }
 

@@ -16,21 +16,31 @@ export class AddCustomerComponent implements OnInit {
     addForm: FormGroup;
 
     ngOnInit() {
-
         this.addForm = this.formBuilder.group({
             id: [],
+            name: ['', Validators.required],
             email: ['', Validators.required],
-            firstName: ['', Validators.required],
-            lastName: ['', Validators.required]
+            mobile: ['', Validators.required],
+            address: this.formBuilder.group({
+                street: ['', Validators.required],
+                number: ['', Validators.required],
+                zipCode: ['', Validators.compose([
+                    Validators.required,
+                    Validators.maxLength(6)
+                ])],
+                city: ['', Validators.required],
+                country: ['', Validators.required],
+            })
         });
-
     }
 
     onSubmit() {
-        this.customerService.createCustomer(this.addForm.value)
-            .subscribe(data => {
-                this.router.navigate(['customer']);
-            });
+        if (this.addForm.valid) {
+            this.customerService.createCustomer(this.addForm.value)
+                .subscribe(data => {
+                    this.router.navigate(['customer']);
+                });
+        }
     }
 
 }

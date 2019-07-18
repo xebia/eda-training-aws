@@ -14,7 +14,7 @@ import {OrderModule} from "./order/order.module";
         BrowserModule,
         AppRouting,
         CustomerModule,
-        OrderModule
+        OrderModule,
     ],
     bootstrap: [AppComponent]
 })

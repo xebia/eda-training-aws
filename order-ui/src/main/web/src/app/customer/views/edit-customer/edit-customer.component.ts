@@ -27,23 +27,36 @@ export class EditCustomerComponent implements OnInit {
             id: [],
             name: ['', Validators.required],
             email: ['', Validators.required],
+            mobile: ['', Validators.required],
+            address: this.formBuilder.group({
+                street: ['', Validators.required],
+                number: ['', Validators.required],
+                zipCode: ['', Validators.compose([
+                    Validators.required,
+                    Validators.maxLength(6)
+                ])],
+                city: ['', Validators.required],
+                country: ['', Validators.required],
+            })
         });
         this.userService.getCustomerById(+userId)
             .subscribe(data => {
-                this.editForm.setValue(data);
+                this.editForm.patchValue(data);
             });
     }
 
     onSubmit() {
-        this.userService.updateCustomer(this.editForm.value)
-            .pipe(first())
-            .subscribe(
-                data => {
-                    this.router.navigate(['customer']);
-                },
-                error => {
-                    alert(error);
-                });
+        if (this.editForm.valid) {
+            this.userService.updateCustomer(this.editForm.value)
+                .pipe(first())
+                .subscribe(
+                    data => {
+                        this.router.navigate(['customer']);
+                    },
+                    error => {
+                        console.error(error)
+                    });
+        }
     }
 
 }

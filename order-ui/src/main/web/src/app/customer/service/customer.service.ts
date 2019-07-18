@@ -7,7 +7,7 @@ export class CustomerService {
     constructor(private http: HttpClient) {
     }
 
-    baseUrl: string = 'http://localhost:9020/customer-api/v2/customers';
+    baseUrl: string = 'http://localhost:9020/customer-api/v1/customers';
 
     getCustomers() {
         return this.http.get<Customer[]>(this.baseUrl);
