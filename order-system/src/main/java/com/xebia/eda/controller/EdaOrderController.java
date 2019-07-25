@@ -19,9 +19,9 @@ import java.util.Optional;
 
 import static com.xebia.common.domain.OrderState.INITIATED;
 import static com.xebia.common.domain.OrderState.SHIPPED;
-import static com.xebia.eda.configuration.Sqs.ORDER_CREATED_QUEUE;
+import static com.xebia.eda.configuration.Sqs.ORDER_PLACED_QUEUE;
 import static com.xebia.eda.configuration.Sqs.ORDER_SHIPPED_EVENT_QUEUE;
-import static com.xebia.eda.domain.OrderPlaced.asOrderCreatedEvent;
+import static com.xebia.eda.domain.OrderPlaced.asOrderPlacedEvent;
 import static java.lang.String.format;
 import static org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy.ON_SUCCESS;
 import static org.springframework.http.ResponseEntity.accepted;
@@ -63,10 +63,10 @@ public class EdaOrderController {
         Order saved = orderService.saveOrder(order.withStatus(INITIATED).withCreatedNow());
 
         return customerViewService.getCustomer(order.getCustomerId())
-                .map(customer -> asOrderCreatedEvent(customer, saved))
+                .map(customer -> asOrderPlacedEvent(customer, saved))
                 .flatMap(event -> {
                     LOGGER.info("EDA: Placing OrderPlaced event on queue: {}", event);
-                        queue.convertAndSend(ORDER_CREATED_QUEUE, event);
+                        queue.convertAndSend(ORDER_PLACED_QUEUE, event);
                     return Optional.of(saved);
                 })
                 .map(result -> accepted().body(result))

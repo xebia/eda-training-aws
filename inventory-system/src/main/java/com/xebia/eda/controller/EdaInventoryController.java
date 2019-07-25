@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.xebia.eda.configuration.Sns.ORDER_SHIPPED_TOPIC;
-import static com.xebia.eda.configuration.Sqs.ORDER_CREATED_QUEUE;
+import static com.xebia.eda.configuration.Sqs.ORDER_PLACED_QUEUE;
 import static org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy.ON_SUCCESS;
 
 @Controller
@@ -41,7 +41,7 @@ public class EdaInventoryController {
         this.scheduler = scheduler;
     }
 
-    @SqsListener(value = ORDER_CREATED_QUEUE, deletionPolicy = ON_SUCCESS)
+    @SqsListener(value = ORDER_PLACED_QUEUE, deletionPolicy = ON_SUCCESS)
     public void handle(OrderPlaced event) {
         Instant shipmentDate = Instant.now().plusSeconds(15);
 

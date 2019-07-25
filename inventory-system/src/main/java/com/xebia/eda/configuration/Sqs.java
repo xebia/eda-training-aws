@@ -20,7 +20,7 @@ import static java.util.Collections.singletonList;
 @Configuration
 public class Sqs {
 
-    public static final String ORDER_CREATED_QUEUE = "orderCreated";
+    public static final String ORDER_PLACED_QUEUE = "orderPlaced";
 
     @Bean(destroyMethod = "doStop")
     public SimpleMessageListenerContainer simpleMessageListenerContainer(SimpleMessageListenerContainerFactory factory,
