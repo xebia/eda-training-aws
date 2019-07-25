@@ -22,7 +22,6 @@ import static org.junit.Assert.assertEquals;
 @AutoConfigureMockMvc
 @SpringBootTest
 @ActiveProfiles({"default", "test"})
-@Ignore
 public class EdaSQSTests {
 
     @Autowired
@@ -40,6 +39,6 @@ public class EdaSQSTests {
         queueMessagingTemplate.convertAndSend(HELLO_QUEUE, order);
 
         Order receive = queueMessagingTemplate.receiveAndConvert(HELLO_QUEUE, Order.class);
-        assertEquals(order, receive);
+        assertEquals(order.toString(), receive.toString());
     }
 }

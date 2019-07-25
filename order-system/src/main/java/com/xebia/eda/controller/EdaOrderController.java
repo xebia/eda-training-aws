@@ -2,8 +2,10 @@ package com.xebia.eda.controller;
 
 import com.xebia.common.domain.Order;
 import com.xebia.common.service.OrderService;
+import com.xebia.eda.domain.AuditEvent;
 import com.xebia.eda.domain.OrderShipped;
 import com.xebia.eda.service.CustomerViewService;
+import com.xebia.eda.service.FirehoseAuditLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +37,16 @@ public class EdaOrderController {
     private final OrderService orderService;
     private final CustomerViewService customerViewService;
     private final QueueMessagingTemplate queue;
+    private final FirehoseAuditLogger auditLogger;
 
     @Autowired
     public EdaOrderController(OrderService orderService,
                               CustomerViewService customerViewService,
-                              QueueMessagingTemplate queue) {
+                              QueueMessagingTemplate queue, FirehoseAuditLogger auditLogger) {
         this.orderService = orderService;
         this.customerViewService = customerViewService;
         this.queue = queue;
+        this.auditLogger = auditLogger;
     }
 
     @GetMapping("/orders/{id}")
@@ -65,8 +69,10 @@ public class EdaOrderController {
         return customerViewService.getCustomer(order.getCustomerId())
                 .map(customer -> asOrderCreatedEvent(customer, saved))
                 .flatMap(event -> {
-                    LOGGER.info("EDA: Placing OrderPlaced event on queue: {}", event);
+                    String msg = "EDA: Placing OrderPlaced event on queue: " + event;
+                    LOGGER.info(msg);
                         queue.convertAndSend(ORDER_CREATED_QUEUE, event);
+                        auditLogger.put(AuditEvent.of(msg));
                     return Optional.of(saved);
                 })
                 .map(result -> accepted().body(result))
@@ -75,7 +81,9 @@ public class EdaOrderController {
 
     @SqsListener(value = ORDER_SHIPPED_EVENT_QUEUE, deletionPolicy = ON_SUCCESS)
     public void handle(@NotificationMessage OrderShipped event) {
-        LOGGER.info("EDA: Received order shipped event: {}", event);
+        String msg = "EDA: Received order shipped event: " + event;
+        LOGGER.info(msg);
+        auditLogger.put(AuditEvent.of(msg));
         orderService.getOrder(event.getOrderId())
                 .map(o -> orderService.updateOrder(o.withStatus(SHIPPED), event.getOrderId()))
                 .orElseThrow(() -> new IllegalArgumentException(format("EDA: Order with id [%s] not found", event.getOrderId())));

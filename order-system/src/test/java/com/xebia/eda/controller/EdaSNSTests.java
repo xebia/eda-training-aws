@@ -33,12 +33,10 @@ import static org.junit.Assert.assertTrue;
 @AutoConfigureMockMvc
 @SpringBootTest
 @ActiveProfiles({"default", "test"})
-@Ignore
 public class EdaSNSTests {
 
     @Component
     @TestConfiguration
-    @EnableSqs
     public static class ManualDeletionPolicyTestListener {
 
         private final CountDownLatch countDownLatch = new CountDownLatch(1);

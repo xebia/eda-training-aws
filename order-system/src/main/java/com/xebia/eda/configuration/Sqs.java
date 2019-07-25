@@ -24,6 +24,7 @@ public class Sqs {
     public static final String ORDER_SHIPPED_EVENT_QUEUE = "orderShippedEvent";
 
     @Bean(destroyMethod = "doStop")
+    @Primary
     public SimpleMessageListenerContainer simpleMessageListenerContainer(SimpleMessageListenerContainerFactory factory,
                                                                          QueueMessageHandler queueMessageHandler) {
         SimpleMessageListenerContainer container = factory.createSimpleMessageListenerContainer();

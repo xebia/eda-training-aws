@@ -8,7 +8,7 @@ IF NOT EXIST localstack (
 )
 echo starting localstack...
 PUSHD localstack
-SET SERVICES="sns,sqs,kinesis,dynamodb,cloudwatch" 
+SET SERVICES="sns,sqs,kinesis,dynamodb,cloudwatch,s3,firehose"
 SET DEFAULT_REGION=eu-west-1 
 docker-compose up -d
 echo localstack started
