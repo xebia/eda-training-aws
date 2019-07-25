@@ -23,6 +23,13 @@ public class ExternalOrderService {
         this.orderSystemUri = orderSystemUri;
     }
 
+    /**
+     * <h3>Exercise 5b</h3>
+     * Task: Call new API Gateway endpoint with PATCH request
+     * The method below calls the order system directly, but it should call the endpoint shown to you when deploying the adapter.
+     * For this exercise to succeed, replace the REST endpoint 'shipments' as follows:
+     * - Change line 38 to call your own URL. You don't need the `orderSystemUri` any more.
+     */
     public void notifyOrderShipped(Long orderId) {
         Map body = new HashMap<String, String>();
         body.put("id", orderId);

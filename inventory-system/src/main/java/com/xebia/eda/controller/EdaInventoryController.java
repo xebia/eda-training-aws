@@ -36,12 +36,12 @@ public class EdaInventoryController {
 
     /**
      * <h3>Exercise 1b</h3>
-     * Task: Consume messages from the 'orderCreated' SQS queue.
+     * Task: Consume messages from the 'orderPlaced' SQS queue.
      * The method below is a copy from the logic of the @see SOAInventoryController and needs to be changed.
      * For this exercise to succeed, replace the REST endpoint 'shipments' as follows:
      * - Change the method to consume 'OrderPlaced' events from a SQS queue (no return type)
      * - remove the REST endpoint annotations (@PostMapping/@ResponseBody)
-     * - add an @SqsListener annotation with configuration to listen to the 'orderCreated' SQS queue.
+     * - add an @SqsListener annotation with configuration to listen to the 'orderPlaced' SQS queue.
      * - Hint: use the 'OrderPlaced.asShipment()' method to convert the OrderPlaced event to a Shipment domain object.
      */
     @PostMapping("/shipments")
