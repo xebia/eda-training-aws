@@ -7,6 +7,7 @@ LAMBDA_NAME=event-to-http-$TAG
 GATEWAY_NAME=$LAMBDA_NAME-$TAG-gateway
 
 # Build zipfile with vendored dependencies
+pushd ..
 pushd src
 zip -r9 ../out/$LAMBDA_NAME.zip .
 popd
@@ -32,3 +33,5 @@ aws lambda create-event-source-mapping \
     --function-name $LAMBDA_NAME \
     --batch-size 1 \
     --endpoint http://localhost:4574
+
+popd

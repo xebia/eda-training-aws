@@ -7,6 +7,7 @@ LAMBDA_NAME=http-to-event-$TAG
 GATEWAY_NAME=$LAMBDA_NAME-gateway
 
 # Build zipfile with vendored dependencies
+pushd ..
 pushd src
 zip -r9 ../out/$LAMBDA_NAME.zip .
 popd
@@ -58,3 +59,4 @@ aws apigateway create-deployment \
 
 echo "Done!"
 echo "API available at: http://localhost:4567/restapis/$API_ID/$STAGE/_user_request_/"
+popd
