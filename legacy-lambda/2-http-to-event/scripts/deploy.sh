@@ -3,7 +3,7 @@
 TAG=$(date +%s)
 REGION=us-east-1
 STAGE=production
-LAMBDA_NAME=event-to-http-$TAG
+LAMBDA_NAME=http-to-event-$TAG
 GATEWAY_NAME=$LAMBDA_NAME-$TAG-gateway
 
 pushd src
