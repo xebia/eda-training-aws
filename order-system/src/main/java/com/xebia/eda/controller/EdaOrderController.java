@@ -21,7 +21,7 @@ import java.util.Optional;
 
 import static com.xebia.common.domain.OrderState.INITIATED;
 import static com.xebia.common.domain.OrderState.SHIPPED;
-import static com.xebia.eda.configuration.Sqs.ORDER_CREATED_QUEUE;
+import static com.xebia.eda.configuration.Sqs.ORDER_PLACED_QUEUE;
 import static com.xebia.eda.configuration.Sqs.ORDER_SHIPPED_EVENT_QUEUE;
 import static com.xebia.eda.domain.OrderPlaced.asOrderPlacedEvent;
 import static java.lang.String.format;
@@ -64,11 +64,11 @@ public class EdaOrderController {
     /**
      * <h3>Exercise 1a</h3>
      * Task: Decouple the inventory-system from the order-system by means of the
-     * SQS queue 'orderCreated'.
+     * SQS queue 'orderPlaced'.
      * The method below is a copy from the logic of the @see SOAOrderController and needs to be changed.
      * For this exercise to succeed, replace the SOA call 'ExternalInventoryService.initiateShipment(...)' with an EDA counterpart:
      * - Transform the Order to an OrderPlaced event (see OrderPlaced.asOrderPlacedEvent(...))
-     * - put the OrderPlaced event to the pre-configured 'orderCreated' SQS queue using the QueueMessagingTemplate.convertAndSend(...) method.
+     * - put the OrderPlaced event to the pre-configured 'orderPlaced' SQS queue using the QueueMessagingTemplate.convertAndSend(...) method.
      */
     @PostMapping("/orders")
     @ResponseBody

@@ -19,9 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.Optional;
-
-import static com.xebia.eda.configuration.Sqs.ORDER_CREATED_QUEUE;
+import static com.xebia.eda.configuration.Sqs.ORDER_PLACED_QUEUE;
 import static com.xebia.eda.domain.OrderPlaced.asOrderPlacedEvent;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -66,6 +64,6 @@ public class EdaControllerTests {
         assertEquals(order.getStatus(), inserted.getStatus());
         assertEquals(order.getLines().size(), inserted.getLines().size());
 
-        verify(queueMessagingTemplate).convertAndSend(ORDER_CREATED_QUEUE, asOrderPlacedEvent(customer, inserted));
+        verify(queueMessagingTemplate).convertAndSend(ORDER_PLACED_QUEUE, asOrderPlacedEvent(customer, inserted));
     }
 }
