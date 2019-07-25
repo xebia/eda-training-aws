@@ -4,10 +4,15 @@ TAG=$(date +%s)
 REGION=us-east-1
 STAGE=production
 LAMBDA_NAME=http-to-event-$TAG
-GATEWAY_NAME=$LAMBDA_NAME-$TAG-gateway
+GATEWAY_NAME=$LAMBDA_NAME-gateway
 
+# Build zipfile with vendored dependencies
 pushd src
-zip -r ../out/$LAMBDA_NAME.zip .
+zip -r9 ../out/$LAMBDA_NAME.zip .
+popd
+
+pushd vendor
+zip -r9 -g ../out/$LAMBDA_NAME.zip .
 popd
 
 # Deploy function to LocalStack
@@ -28,7 +33,7 @@ RESOURCE_ID=$(aws apigateway get-resources --rest-api-id $API_ID --query 'items[
 aws apigateway put-method \
     --rest-api-id $API_ID \
     --resource-id $RESOURCE_ID \
-    --http-method GET \
+    --http-method POST \
     --authorization-type "NONE" \
     --endpoint http://localhost:4567 \
     --region $REGION
@@ -37,7 +42,7 @@ aws apigateway put-integration \
     --region $REGION \
     --rest-api-id $API_ID \
     --resource-id $RESOURCE_ID \
-    --http-method GET \
+    --http-method POST \
     --type AWS_PROXY \
     --integration-http-method POST \
     --uri arn:aws:apigateway:$REGION:lambda:path/2015-03-31/functions/$LAMBDA_ARN/invocations \

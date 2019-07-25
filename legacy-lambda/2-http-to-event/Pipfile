@@ -4,10 +4,11 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-black = "*"
+black = "==19.3b0"
 pylint = "*"
 
 [packages]
+boto3 = "*"
 
 [requires]
 python_version = "3.6"

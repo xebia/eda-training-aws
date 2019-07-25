@@ -10,7 +10,6 @@ def handler(event, context):
     """
     Exercise 4
     Task: use the consumed SQS message in `event` to perform a POST call on the legacy Inventory service
-    We've added some code to help you get the message (there might be multiple) from the Lambda event.
     For this exercise to succeed do the following:
     - Grab the records from the Lambda event (under the `Records` key in the `event` dict)
     - For each message:
