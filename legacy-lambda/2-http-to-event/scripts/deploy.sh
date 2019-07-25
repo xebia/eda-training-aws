@@ -33,7 +33,7 @@ RESOURCE_ID=$(aws apigateway get-resources --rest-api-id $API_ID --query 'items[
 aws apigateway put-method \
     --rest-api-id $API_ID \
     --resource-id $RESOURCE_ID \
-    --http-method POST \
+    --http-method PATCH \
     --authorization-type "NONE" \
     --endpoint http://localhost:4567 \
     --region $REGION
@@ -42,7 +42,7 @@ aws apigateway put-integration \
     --region $REGION \
     --rest-api-id $API_ID \
     --resource-id $RESOURCE_ID \
-    --http-method POST \
+    --http-method PATCH \
     --type AWS_PROXY \
     --integration-http-method POST \
     --uri arn:aws:apigateway:$REGION:lambda:path/2015-03-31/functions/$LAMBDA_ARN/invocations \

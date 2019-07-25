@@ -9,7 +9,7 @@ def success(body):
 
 def handler(event, context):
     """
-    Exercise 5
+    Exercise 5a
     Task: take the payload that was POSTed over HTTP and put it on the `orderShipped` queue.
     For this exercise to succeed do the following:
     - Get a handle to SQS by calling _get_sqs()
