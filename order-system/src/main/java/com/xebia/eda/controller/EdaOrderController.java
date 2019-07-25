@@ -71,7 +71,7 @@ public class EdaOrderController {
                 .flatMap(event -> {
                     String msg = "EDA: Placing OrderPlaced event on queue: " + event;
                     LOGGER.info(msg);
-                        queue.convertAndSend(ORDER_CREATED_QUEUE, event);
+                        queue.convertAndSend(ORDER_PLACED_QUEUE, event);
                         auditLogger.put(AuditEvent.of(msg));
                     return Optional.of(saved);
                 })
