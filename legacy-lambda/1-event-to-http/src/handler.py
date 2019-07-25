@@ -2,10 +2,6 @@ import json
 import requests
 
 
-def failure(msg):
-    raise Exception(msg)
-
-
 def success(body):
     return {"statusCode": 200, "body": json.dumps(body)}
 
