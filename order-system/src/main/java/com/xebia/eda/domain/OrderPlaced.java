@@ -29,7 +29,7 @@ public class OrderPlaced {
         this.items = items;
     }
 
-    public static OrderPlaced asOrderCreatedEvent(Customer customer, Order order) {
+    public static OrderPlaced asOrderPlacedEvent(Customer customer, Order order) {
         ShippingAddress shippingAddress = order.getShippingAddress();
         return new OrderPlaced(
                 order.getId(),

@@ -2,8 +2,8 @@
 
 AWS_REGION=eu-west-1
 
-# Queue for OrderCreated events
-aws sqs create-queue --queue-name orderCreated --endpoint http://localhost:4576 --region $AWS_REGION
+# Queue for orderPlaced events
+aws sqs create-queue --queue-name orderPlaced --endpoint http://localhost:4576 --region $AWS_REGION
 
 # SNS topic + SQS queues + subscriptions for OrderShipped
 aws sns create-topic --name orderShipped --endpoint http://localhost:4575 --region $AWS_REGION
