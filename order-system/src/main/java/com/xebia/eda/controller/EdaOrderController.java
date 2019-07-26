@@ -93,15 +93,11 @@ public class EdaOrderController {
      * - remove the RPC call 'customerService.notifyCustomer(...)' which is not needed anymore since the CRM-system will consume the same event by its own.
      * - Hint: don't forget to annotate the 'OrderShipped' event with the @NotificationMessage annotation. Do you know why this is required?
      */
-    @PatchMapping("/orders/{id}")
-    @ResponseBody
-    public Order patchOrder(@Valid @RequestBody Order order, @PathVariable("id") Long id) {
-        Optional<Order> saved = orderService.getOrder(id);
-        return saved.map(o -> {
-            LOGGER.info("SOA: Order is shipped: {}", id);
-            Order patched = orderService.updateOrder(o.withStatus(order.getStatus()), id);
-            customerService.notifyCustomer(o.getCustomerId(), patched.getId());
-            return patched;
-        }).orElseThrow(() -> new IllegalArgumentException(String.format("Order with id %s not found", id)));
+    @SqsListener(value = ORDER_SHIPPED_EVENT_QUEUE, deletionPolicy = ON_SUCCESS)
+    public void handle(@NotificationMessage OrderShipped event) {
+        LOGGER.info("EDA: Received order shipped event: " + event);
+        Optional<Order> saved = orderService.getOrder(event.getOrderId());
+        saved.map(o -> orderService.updateOrder(o.withStatus(SHIPPED), event.getOrderId()))
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Order with id %s not found", event.getOrderId())));
     }
 }

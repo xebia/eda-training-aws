@@ -5,6 +5,7 @@ import com.xebia.common.service.ExternalOrderService;
 import com.xebia.common.service.InventoryService;
 import com.xebia.eda.configuration.Sqs;
 import com.xebia.eda.domain.OrderPlaced;
+import com.xebia.eda.domain.OrderShipped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.xebia.eda.configuration.Sns.ORDER_SHIPPED_TOPIC;
 import static com.xebia.eda.configuration.Sqs.ORDER_PLACED_QUEUE;
 import static org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy.ON_SUCCESS;
 
@@ -56,7 +60,7 @@ public class EdaInventoryController {
         LOGGER.info("EDA: received order {}", event);
         Instant shipmentDate = Instant.now().plusSeconds(15);
         Shipment shipment = event.asShipment();
-        scheduleFakeShipmentNotification(shipment, shipmentDate);
+        scheduleFakeShipmentNotification(event, shipmentDate);
         inventoryService.saveShipment(shipment.withShipmentDate(shipmentDate));
     }
 
@@ -71,13 +75,17 @@ public class EdaInventoryController {
      * - create an instance of 'OrderShipped' using the data from 'OrderPlaced' and 'shipmentDate'
      * - put the OrderShipped event to the pre-configured 'orderShipped' SNS topic using the NotificationMessagingTemplate.sendNotification(...) method.
      */
-    private void scheduleFakeShipmentNotification(Shipment shipment, Instant shipmentDate) {
+    private void scheduleFakeShipmentNotification(OrderPlaced event, Instant shipmentDate) {
         scheduler.schedule(() -> {
-            LOGGER.info("EDA: call order system to notify that order with id=[{}] is shipped at [{}]", shipment.getOrderId(), shipmentDate);
-            externalOrderService.notifyOrderShipped(shipment.getOrderId());
-        }, shipmentDate);
+            try {
+                OrderShipped orderShippedEvent = new OrderShipped(event.getOrderId(), event.getCustomerId(), LocalDateTime.ofInstant(shipmentDate, OffsetDateTime.now().getOffset()));
+                topic.sendNotification(ORDER_SHIPPED_TOPIC, orderShippedEvent, "Order shipped!");
+                LOGGER.info("EDA: Sent OrderShipped event {}",orderShippedEvent);
+            } catch(Exception ex) {
+                LOGGER.error("EDA: Failed to send OrderShipped Event due to {}", ex.getMessage(), ex);
+            }
 
-        LOGGER.info("EDA: Scheduled order with id=[{}] to be shipped at {}", shipment.getOrderId(), shipmentDate);
+        }, shipmentDate);
     }
 
     @GetMapping("/shipments/{id}")

@@ -3,14 +3,20 @@ package com.xebia.eda.controller;
 import com.xebia.common.domain.Customer;
 import com.xebia.common.service.CustomerService;
 import com.xebia.common.service.NotificationService;
+import com.xebia.eda.domain.OrderShipped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.aws.messaging.config.annotation.NotificationMessage;
+import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+
+import static com.xebia.eda.configuration.Sqs.ORDER_SHIPPED_NOTIFICATION_QUEUE;
+import static org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy.ON_SUCCESS;
 
 
 @RestController
@@ -62,10 +68,10 @@ public class EdaCustomerController {
      * - add an @SqsListener annotation with configuration to listen to the 'orderShippedNotification' SQS queue and the correct 'SqsMessageDeletionPolicy'
      * - Hint: don't forget to annotate the 'OrderShipped' event with the @NotificationMessage annotation.
      */
-    @PutMapping("/customers/{id}/notifications")
-    public void notifyCustomer(@PathVariable("id") Long id, @RequestParam("orderId") Long orderId) {
-        LOGGER.info("EDA: Notify customer that order is shipped");
-        customerService.getCustomer(id)
-                .ifPresent(customer -> notificationService.notifyCustomer(customer, orderId));
+    @SqsListener(value = ORDER_SHIPPED_NOTIFICATION_QUEUE, deletionPolicy = ON_SUCCESS)
+    public void handle(@NotificationMessage OrderShipped event) {
+        LOGGER.info("EDA: Received order shipped event: {}", event);
+        customerService.getCustomer(event.getCustomerId())
+                .ifPresent(customer -> notificationService.notifyCustomer(customer, event.getOrderId()));
     }
 }
