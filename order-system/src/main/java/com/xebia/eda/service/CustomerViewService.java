@@ -25,8 +25,7 @@ public class CustomerViewService {
      * - Use the injected @see CustomerViewRepository to get the (replicated) customer from the local database using the method: 'getOne(...)'
      */
     public Customer getCustomer(Long id) {
-        //TODO: replace this line
-        return externalCustomerService.getCustomer(id);
+        return customerViewRepository.getOne(id);
     }
 
 }

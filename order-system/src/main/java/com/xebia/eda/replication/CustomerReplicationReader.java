@@ -30,7 +30,9 @@ public class CustomerReplicationReader {
      * - add an @StreamListener annotation with configuration to listen to the 'customerReplication' Kinesis Stream'
      * - save the consumed customer in the database using the 'customerViewRepository.save(...)' method
      */
+    @StreamListener(CustomerConsumer.STREAM)
     public void processCustomer(Customer customer) {
-        //TODO: implement
+        LOGGER.info("Received customer update: {}", customer);
+        customerViewRepository.save(customer);
     }
 }

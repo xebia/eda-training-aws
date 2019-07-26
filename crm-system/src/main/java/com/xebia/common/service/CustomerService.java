@@ -39,7 +39,7 @@ public class CustomerService {
      */
     public Customer saveCustomer(Customer customer ) {
         Customer saved = customerRepository.save(customer);
-        //TODO: replicate customer
+        stream.replicateCustomer(saved);
         return saved;
     }
 
@@ -52,7 +52,7 @@ public class CustomerService {
     public Customer updateCustomer(Customer customer, Long id) {
         Assert.isTrue(customer.getId() == null || customer.getId().equals(id), "Conflicting customer id");
         Customer saved = customerRepository.save(customer.withId(id));
-        //TODO: replicate customer
+        stream.replicateCustomer(saved);
         return saved;
     }
 

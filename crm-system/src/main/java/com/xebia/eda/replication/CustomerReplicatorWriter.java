@@ -29,6 +29,7 @@ public class CustomerReplicatorWriter {
      * - Use the injected CustomerProducer to put a customer on the 'customerReplication' stream
      */
     public void replicateCustomer(Customer customer) {
-        //TODO: use CustomerProducer to put the given customer on the Kinesis Stream for replication
+        LOGGER.info("Replicating customer: {}", customer);
+        customerProducer.customersOut().send(new GenericMessage<>(customer));
     }
 }
