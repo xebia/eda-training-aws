@@ -8,8 +8,9 @@ IF NOT EXIST localstack (
 )
 echo starting localstack...
 PUSHD localstack
-SET SERVICES="sns,sqs,kinesis,dynamodb,cloudwatch,s3,firehose"
-SET DEFAULT_REGION=eu-west-1 
+SET SERVICES="sqs,sns,kinesis,dynamodb,cloudwatch,lambda,apigateway,s3,firehose"
+SET DEFAULT_REGION=eu-west-1
+SET LAMBDA_EXECUTOR=docker-reuse
 docker-compose up -d
 echo localstack started
 POPD
