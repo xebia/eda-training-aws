@@ -3,6 +3,7 @@ package com.xebia.eda.controller;
 import com.xebia.common.domain.Customer;
 import com.xebia.common.domain.Order;
 import com.xebia.common.service.OrderService;
+import com.xebia.eda.domain.OrderPlaced;
 import com.xebia.eda.domain.OrderShipped;
 import com.xebia.soa.service.ExternalCustomerService;
 import com.xebia.soa.service.ExternalInventoryService;
@@ -75,8 +76,9 @@ public class EdaOrderController {
     public ResponseEntity<Order> saveOrder(@Valid @RequestBody Order order) {
         Order saved = orderService.saveOrder(order.withStatus(INITIATED).withCreatedNow());
         Customer customer = customerService.getCustomer(order.getCustomerId());
-        //TODO: replace following line
-        externalInventoryService.initiateShipment(customer, saved);
+        OrderPlaced event = OrderPlaced.asOrderPlacedEvent(customer, order);
+        queue.convertAndSend(ORDER_PLACED_QUEUE, event);
+        LOGGER.info("EDA put event {} on queue", event);
         return accepted().body(saved);
     }
 
