@@ -3,7 +3,7 @@
 function start_localstack {
     pushd localstack
     echo "starting localstack in `pwd`..."
-    TMPDIR=/private$TMPDIR SERVICES="sqs,sns,kinesis,dynamodb,cloudwatch,lambda,apigateway, s3,firehose" DEFAULT_REGION=eu-west-1 LAMBDA_EXECUTOR=docker-reuse docker-compose up -d
+    TMPDIR=/private$TMPDIR SERVICES="sqs,sns,kinesis,dynamodb,cloudwatch,lambda,apigateway,s3,firehose" DEFAULT_REGION=eu-west-1 LAMBDA_EXECUTOR=docker-reuse docker-compose up -d
     echo "localstack started"
     popd
 }
