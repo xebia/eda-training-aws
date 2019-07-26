@@ -60,14 +60,16 @@ class DataLoader implements ApplicationRunner {
     }
 
     public void run(ApplicationArguments args) throws Exception {
-        List<Customer> customers = Arrays.asList(
-                new Customer("John Doe", "abc@efg.nl", "0612345678", true, true, new Address("Sesamstraat", "5b", "3456AB", "Amsterdam", "Netherlands")),
-                new Customer("Dave Burk", "dave@burk.nl", "0612345679", true, false, new Address("Beathovenlaan", "4", "4532AB", "Rotterdam", "Netherlands")),
-                new Customer("Jane Swam", "jane@hij.nl", "0612345680", false, true, new Address("Sunset Avenue", "4", "4455EF", "Utrecht", "Netherlands")));
-        java.util.List<Customer> loaded = customerService.saveCustomers(customers);
-        LOGGER.info("Loaded " + customers.size() + " initial Customers:\n" + loaded.stream().map(i -> i.toString() + "\n").collect(Collectors.toList()));
+        if(customerService.getCustomers().isEmpty()) {
+            List<Customer> customers = Arrays.asList(
+                    new Customer("John Doe", "abc@efg.nl", "0612345678", true, true, new Address("Sesamstraat", "5b", "3456AB", "Amsterdam", "Netherlands")),
+                    new Customer("Dave Burk", "dave@burk.nl", "0612345679", true, false, new Address("Beathovenlaan", "4", "4532AB", "Rotterdam", "Netherlands")),
+                    new Customer("Jane Swam", "jane@hij.nl", "0612345680", false, true, new Address("Sunset Avenue", "4", "4455EF", "Utrecht", "Netherlands")));
+            java.util.List<Customer> loaded = customerService.saveCustomers(customers);
+            LOGGER.info("Loaded " + customers.size() + " initial Customers:\n" + loaded.stream().map(i -> i.toString() + "\n").collect(Collectors.toList()));
 
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        LOGGER.info("Loaded " + customers.size() + " initial Customers as json :\n" + mapper.writeValueAsString(customers));
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            LOGGER.info("Loaded " + customers.size() + " initial Customers as json :\n" + mapper.writeValueAsString(customers));
+        }
     }
 }
