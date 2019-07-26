@@ -1,6 +1,8 @@
 package com.xebia.eda.domain;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 public class OrderShipped {
@@ -12,10 +14,10 @@ public class OrderShipped {
     public OrderShipped() {
     }
 
-    public OrderShipped(Long orderId, Long customerId, LocalDateTime shipmentDate) {
+    public OrderShipped(Long orderId, Long customerId, Instant shipmentDate) {
         this.orderId = orderId;
         this.customerId = customerId;
-        this.shipmentDate = shipmentDate;
+        this.shipmentDate = LocalDateTime.ofInstant(shipmentDate, OffsetDateTime.now().getOffset());
     }
 
     public Long getOrderId() {
