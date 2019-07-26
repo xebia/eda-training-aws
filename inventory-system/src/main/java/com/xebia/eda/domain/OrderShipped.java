@@ -15,9 +15,13 @@ public class OrderShipped {
     }
 
     public OrderShipped(Long orderId, Long customerId, Instant shipmentDate) {
+        this(orderId, customerId, LocalDateTime.ofInstant(shipmentDate, OffsetDateTime.now().getOffset()));
+    }
+
+    public OrderShipped(Long orderId, Long customerId, LocalDateTime shipmentDate) {
         this.orderId = orderId;
         this.customerId = customerId;
-        this.shipmentDate = LocalDateTime.ofInstant(shipmentDate, OffsetDateTime.now().getOffset());
+        this.shipmentDate = shipmentDate;
     }
 
     public Long getOrderId() {
