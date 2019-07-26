@@ -47,7 +47,7 @@ public class EdaInventoryController {
 
         Runnable publisher = () -> {
             try {
-                OrderShipped orderShippedEvent = new OrderShipped(event.getOrderId(), event.getCustomerId(), LocalDateTime.ofInstant(shipmentDate, OffsetDateTime.now().getOffset()));
+                OrderShipped orderShippedEvent = new OrderShipped(event.getOrderId(), event.getCustomerId(), shipmentDate);
                 topic.sendNotification(ORDER_SHIPPED_TOPIC, orderShippedEvent, "Order shipped!");
                 LOGGER.info("EDA: Sent OrderShipped event {}",orderShippedEvent);
             } catch(Exception ex) {

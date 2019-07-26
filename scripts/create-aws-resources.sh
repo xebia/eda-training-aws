@@ -14,6 +14,11 @@ aws sqs create-queue --queue-name orderShippedNotification --endpoint http://loc
 aws sns subscribe --topic-arn arn:aws:sns:${AWS_REGION}:123456789012:orderShipped --protocol sqs --notification-endpoint arn:aws:sqs:${AWS_REGION}:queue:orderShippedEvent --endpoint http://localhost:4575 --region $AWS_REGION
 aws sns subscribe --topic-arn arn:aws:sns:${AWS_REGION}:123456789012:orderShipped --protocol sqs --notification-endpoint arn:aws:sqs:${AWS_REGION}:queue:orderShippedNotification --endpoint http://localhost:4575 --region $AWS_REGION
 
+#sqs
+#aws sqs receive-message --endpoint http://localhost:4576 --queue-url http://localhost:4576/queue/orderPlaced
+
+#aws sqs delete-message --endpoint http://localhost:4576 --queue-url http://localhost:4576/queue/orderPlaced --receipt-handle "0bbdf456-6638-44b8-9378-b1935c5b83cd"
+
 # Kinesis stream for replicating customers
 aws kinesis create-stream --stream-name customerReplication --shard-count 2 --endpoint http://localhost:4568 --region $AWS_REGION
 
