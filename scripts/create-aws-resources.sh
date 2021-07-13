@@ -51,7 +51,7 @@ aws firehose --endpoint http://localhost:4573 create-delivery-stream \
 aws firehose --endpoint http://localhost:4573 describe-delivery-stream --delivery-stream-name auditLoggingStream
 
 #put record
-#aws firehose  --endpoint http://localhost:4573  put-record --delivery-stream-name auditLoggingStream --record='Data="{\"foo\":\"bar\"}"'
+  #aws firehose  --endpoint http://localhost:4573  put-record --delivery-stream-name auditLoggingStream --record='Data="{\"foo\":\"bar\"}"'
 
 #delete
 #aws firehose --endpoint http://localhost:4573 delete-delivery-stream --delivery-stream-name  auditLoggingStream
