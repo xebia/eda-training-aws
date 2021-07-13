@@ -13,8 +13,7 @@ Go into the newly created directory: cd eda-training-aws
 
 ### Setup localstack, which is a local AWS environment and databases
 From the project root <eda-training-aws> go into the <scripts> directory:  `cd scripts`
-- Run: `start-local-stack.bat` for windows or `./start-local-stack.sh` for mac, linux
-- Run: `start-databases.bat` for windows or `./start-databases.sh` for mac, linux
+- Run: `start-middleware.bat` for windows or `./start-middleware.sh` for mac, linux
 
 ### Compile project
 Move back to the project root directory <eda-training-aws>: cd ..
